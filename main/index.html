@@ -36,12 +36,7 @@
   <!-- To automatically render math in text elements, include the auto-render extension: -->
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"
       onload="renderMathInElement(document.body);">
-  </script>
-  
-  <script type="module">
-    import langchain from 'https://cdn.jsdelivr.net/npm/langchain@0.3.2/+esm'
-  </script>
-
+  </script> 
 </head>
 
 <!-- css -->
@@ -681,10 +676,27 @@ function getPrompt(){
   return getValueByID("formterminal");
 }
 
+function renderLatexInString(inputString) {
+    // Expressão regular para encontrar partes do texto que estão entre \[ e \]
+    const latexRegex = /\\\[([\s\S]*?)\\\]/g;
+
+    // Função para substituir as partes encontradas
+    const outputString = inputString.replace(latexRegex, (match, latex) => {
+        const renderedLatex = katex.renderToString(latex.trim(), {
+            throwOnError: false
+        });
+        
+        // Retorna o HTML renderizado
+        return renderedLatex;
+    });
+
+    return outputString;
+}
+
 function appendChatUser(text){
   const container = document.getElementById("terminalContainer");
   let p = document.createElement("p");
-  p.innerText = text;
+  p.innerHTML = renderLatexInString(text);
   p.classList.add("chatUser");
   container.appendChild(p);
   scrollToBottom("scroll");
@@ -693,7 +705,7 @@ function appendChatUser(text){
 function appendChatBot(text){
   const container = document.getElementById("terminalContainer");
   let p = document.createElement("p");
-  p.innerText = text;
+  p.innerHTML = renderLatexInString(text);
   p.classList.add("chatBot");
   container.appendChild(p);
   scrollToBottom("scroll");
