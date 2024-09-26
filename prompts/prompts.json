@@ -31,7 +31,7 @@
   },
   {
     "name":"Pesquisa Online",
-    "redirect":"https://luisrguerra.github.io/sapien/online/",
+    "redirect":"https://luisrguerra.github.io/oraclechat/online/",
     "method":"system-prompt",
     "prompt":"",
     "description": "Abrindo a o buscador online..."
