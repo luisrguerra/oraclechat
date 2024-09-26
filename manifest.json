@@ -1,0 +1,17 @@
+{
+    "name": "OracleChat",
+    "short_name": "OracleChat",
+    "theme_color": "#1e2227",
+    "background_color": "#1e2227",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/oraclechat/main/",
+    "start_url": "/oraclechat/main/",
+    "icons": [
+        {
+          "src": "/oraclechat/icon.png",
+          "type": "image/png",
+          "sizes": "768x768"
+        }
+    ]
+}
