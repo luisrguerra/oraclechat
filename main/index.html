@@ -677,10 +677,11 @@ function getPrompt(){
 }
 
 function renderLatexInString(inputString) {
-    // Expressão regular para encontrar partes do texto que estão entre \[ e \]
-    const latexRegex = /\\\[([\s\S]*?)\\\]/g;
+    // Expressão regular para encontrar partes do texto que estão entre \( e \) ou \[ e \]
+    const latexRegex = /\\[([]([\s\S]*?)\\[)\]]/g;
     const parts = inputString.split(latexRegex);
     const container = document.createElement("p");
+    
     for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
 
@@ -690,12 +691,14 @@ function renderLatexInString(inputString) {
             elementText.innerText = part.trim();
             container.appendChild(elementText);
         } else {
+            // Renderiza o LaTeX encontrado. 
             const renderedLatex = katex.renderToString(part.trim(), { throwOnError: false });
             const elementLatex = document.createElement("span");
             elementLatex.innerHTML = renderedLatex;
             container.appendChild(elementLatex);
         }
     }
+    
     return container;
 }
 
