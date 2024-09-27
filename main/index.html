@@ -701,6 +701,10 @@ function renderLatexInString(inputString) {
             const elementLatex = document.createElement("span");
             elementLatex.innerHTML = renderedLatex;
             container.appendChild(elementLatex);
+
+            const space2 = document.createElement("span");
+            space2.innerHTML = "&nbsp;"; // ou você pode usar um estilo CSS para adicionar margem
+            container.appendChild(space2);
         }
     }
 
