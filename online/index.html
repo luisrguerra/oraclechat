@@ -16,6 +16,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css" integrity="sha512-LX0YV/MWBEn2dwXCYgQHrpa9HJkwB+S+bnBpifSOTO1No27TqNMKYoAn6ff2FBh03THAzAiiCwQ+aPX+/Qt/Ow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <style>
+    :root {
+      --font-color: #c9d3e3;
+      --font-color2: white;
+      --prompt-border-color: hsla(0, 0%, 100%, 0.09);
+      --button-border-color: #ffffff40;
+      --button-border-color-selected: #ffffff7e;
+      --prompt-background-color: hsl(218, 14%, 16%);
+      --chat-background-color: hsl(213, 13%, 14%);
+    }
     .breakline {
         white-space: pre-wrap;
     }
@@ -42,6 +51,29 @@
         color:var(--bs-body-color);
       }
     }
+    select.form-select,select.form-select:disabled{
+        width:100%;
+        /* text-align: center; don't work on iphone */
+        text-align: center;
+        /* text-align-last: center; works on iphone */
+        text-align-last: center;
+        margin-inline: auto;
+        border-width: 2px;
+    }
+    select.theme:focus,select.theme:active{
+      box-shadow: none;
+    }
+    select.theme,select.theme:disabled{
+      color: var(--font-color);
+      background-color: var(--chat-background-color);
+      border-color: #ffffff40;
+    }
+
+    select.theme:focus,select.theme:active{
+      color: var(--font-color);
+      background-color: var(--chat-background-color);
+      border-color: #ffffff7e;
+    }
 </style>
 <body style="margin-inline: 1em;margin-block: 1em;">
 
@@ -52,6 +84,7 @@
     </div>
 
     <div class="mb-3" style="padding-top: 1em;">
+        <select class="form-select form-select-lg mb-3 theme" id="sourceSiteSelect" style="max-width: 100%;"></select>
         <label for="inputTextArea" class="form-label">Pergunta:</label>
         <textarea type="text" class="form-control" id="inputTextArea" name="inputTextArea" rows="6"></textarea>
     </div>
@@ -110,6 +143,47 @@ import openailib from 'https://cdn.jsdelivr.net/npm/openai@4.10.0/+esm';
 let openai;
 let modelName = "gpt-4o-mini";
 let gptTemperature = 1;
+
+/* site source selector */
+const sourceSiteList = [
+  {name:"Web",value:""},
+  {name:"Wikipedia",value:"Wikipedia"},
+  {name:"Globo (Notícias)",value:"Globo G1"},
+  {name:"Stack Overflow (Programação)",value:"Stack Overflow"},
+];
+function getValueByID(id){
+  const element = document.getElementById(id);
+  return element.value;
+}
+function createSelectOption(text, value, selected) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.text = text;
+  if (selected) {
+    option.selected = true;
+  }
+  return option;
+}
+function loadSelectOptions(ID,optionList){
+  const maxItems = optionList.length;
+  const Selectelement = document.getElementById(ID);
+  for (let i = 0; i < maxItems; i++) {
+    const name = optionList[i].name;
+    const value = optionList[i].value;
+    let selected = false;
+    if(i==0){
+      selected = true;
+    }
+    const option = createSelectOption(name, value, selected);
+    Selectelement.appendChild(option);
+  }
+};
+loadSelectOptions('sourceSiteSelect',sourceSiteList);
+function getSourceSiteSelect(){
+  const value = getValueByID('sourceSiteSelect');
+  return value;
+}
+/* end of site source selector */
 
 function ztoa(x){
   return atob(atob(x));
@@ -238,7 +312,7 @@ function appendSolutionAttempt(text) {
 }
 
 async function generateAnswerAttempt(){
-   const inputText = getInputText();
+   const inputText = getSourceSiteSelect() + "\n" + getInputText();
    const prompt = "Responda em até 4 linhas: " + inputText;
    let  messages = initializeChat("Utilize um estilo de escrita direto ao ponto. Você atuará como um buscador de informações.");
    messages = await generateChatMessages(prompt, messages);
