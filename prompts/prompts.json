@@ -113,6 +113,13 @@
     "description": "Qual problema você gostaria que eu solucionasse?"
   },
   {
+    "name":"Soluções resumidas",
+    "method":"evry-user-begin",
+    "model":"gpt-4o-mini",
+    "prompt":"Você atuará como um solucionador de problemas, resolva de forma resumida e fácil de entender. Responda baseado em fatos reais. Responda o seguinte problema:",
+    "description": "Qual problema você gostaria que eu solucionasse?"
+  },
+  {
     "name":"➗ Prof. de Matemática",
     "method":"system-prompt",
     "model":"gpt-4o-mini",
