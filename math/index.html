@@ -88,7 +88,7 @@
         <label for="inputTextArea" class="form-label">Pergunta:</label>
         <textarea type="text" class="form-control" id="inputTextArea" name="inputTextArea" rows="6"></textarea>
     </div>
-    <button id="generate" class="btn btn-primary">Pesquisar</button>
+    <button id="generate" class="btn btn-primary">Resolver</button>
     <br><br>
     <h5>Resposta final:</h5>
     <p id="finalAnswer">Resposta final ainda não gerada.</p>
@@ -105,7 +105,7 @@
           <div class="accordion-body">
             <div class="accordion-body">
               <div id="solutionsDiv">
-                <p>Respostas ainda não geradas.</p>
+                <p>Código fonte não gerado.</p>
               </div>
             </div>
           </div>
@@ -396,7 +396,7 @@ generateButton.addEventListener("click", async function() {
     document.getElementById("finalAnswer").textContent = finalAnswer;
     executeCodigo(codigoExtraido);
     enableButtonById("generate");
-    changeButtonTextById("Pesquisar", "generate");
+    changeButtonTextById("Resolver", "generate");
 });
 
 </script>
