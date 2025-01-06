@@ -162,6 +162,13 @@
     "description": "Olá! Eu sou o MatGPT, um assistente de matemática otimizado para buscar fórmulas matemáticas e de áreas relacionadas como por exemplo física. Me forneça um nome de fórmula matemática ou um contexto para eu encontrar a fórmula para você."
   },
   {
+    "name":"DeepSeek 3",
+    "method":"system-prompt",
+    "model":"deepseek/deepseek-chat",
+    "prompt":"Responda somente em português, não responda em chinês, não responda em inglês.",
+    "description": "Olá! Eu sou o DeepSeek 3, um modelos de IA aberto avançado com nível próximo do GPT4o."
+  },
+  {
     "name":"Dicionário",
     "method":"system-prompt",
     "model":"gpt-4o-mini",
