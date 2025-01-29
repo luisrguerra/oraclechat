@@ -129,6 +129,7 @@
               <div id="datasetDiv">
                 <p>Dataset não gerado.</p>
               </div>
+              <button class="btn btn-primary" onclick="copyToClipboard()">Copiar</button>
             </div>
           </div>
         </div>
@@ -459,6 +460,17 @@ function generateJSONL(systemContent, userContent, assistantContent) {
 
 </script>
 
+<script>
+function copyToClipboard() {
+            let text = document.getElementById("datasetDiv").innerText;
+            let textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+}
+</script>
 
 
 
