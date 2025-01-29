@@ -418,6 +418,7 @@ function executeCodigo(code) {
 const generateButton = document.getElementById("generate");
 generateButton.addEventListener("click", async function() {
     clearSolutionsDiv();
+    clearDatasetDiv();
     clearFinalAnswer();
     disableButtonById("generate");
     changeButtonTextById("Gerando respostas...", "generate");
