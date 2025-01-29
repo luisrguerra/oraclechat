@@ -93,15 +93,16 @@
     <h5>Resposta final:</h5>
     <p id="finalAnswer">Resposta final ainda não gerada.</p>
 
-    <!-- acordiao do resultado das buscas na internet -->
-    <div class="accordion" id="accordionSearch">
+    <!-- acordiao do resultado da solucao -->
+    <div class="accordion" id="accordionSolution">
       <div class="accordion-item">
         <h2 class="accordion-header" id="heading1">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-            Código fonte (Javascript)
+            Código fonte
           </button>
         </h2>
-        <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionSearch">
+        
+        <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionSolution">
           <div class="accordion-body">
             <div class="accordion-body">
               <div id="solutionsDiv">
@@ -112,7 +113,28 @@
         </div>
       </div>
     </div>
-    <!-- fim de acordiao do resultado das buscas na internet -->
+
+    <!-- acordiao do dataset -->
+    <div class="accordion mt-3" id="accordionDataset">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading2">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+            Dataset
+          </button>
+        </h2>
+        
+        <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionDataset">
+          <div class="accordion-body">
+            <div class="accordion-body">
+              <div id="datasetDiv">
+                <p>Dataset não gerado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- fim de acordiao do dataset -->
 
     <br>
 
@@ -308,8 +330,20 @@ function appendSolutionAttempt(text) {
     solutionsDiv.appendChild(pElement);
 }
 
+function appendDataset(text) {
+    const datasetDiv = document.getElementById("datasetDiv");
+    const pElement = document.createElement("p");
+    pElement.textContent = text;
+    datasetDiv.appendChild(pElement);
+}
+
 function clearSolutionsDiv() {
     const contentElement = document.getElementById("solutionsDiv");
+    contentElement.innerHTML = "";
+}
+
+function clearDatasetDiv() {
+    const contentElement = document.getElementById("datasetDiv");
     contentElement.innerHTML = "";
 }
 
@@ -390,14 +424,38 @@ generateButton.addEventListener("click", async function() {
     const promptInput = "Resolva utilizando uma implementação na linguagem javascript para realizar cálculos e utilizando console.log() para imprimir a resposta final do problema/exercício:" + getInputText();
     modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-4o-mini-v6-epoch4:AoXnkaQS";
     const answer = await generateChatMessages(promptInput, messages);
-    const codigoExtraido = extrairTextoCodigo(lastMessage(answer))
-    appendSolutionAttempt(lastMessage(answer));
+    let lastMessageText = lastMessage(answer);
+    const codigoExtraido = extrairTextoCodigo(lastMessageText)
+    appendSolutionAttempt(lastMessageText);
     const finalAnswer = ""
     document.getElementById("finalAnswer").textContent = finalAnswer;
     executeCodigo(codigoExtraido);
     enableButtonById("generate");
     changeButtonTextById("Resolver", "generate");
+
+    //geracao do dataset
+    const dataset = generateJSONL("", promptInput, lastMessageText);
+    clearDatasetDiv();
+    appendDataset(dataset);
 });
+
+function generateJSONL(systemContent, userContent, assistantContent) {
+            // Create JSONL object
+            const jsonObject = {
+                messages: [
+                    { role: "system", content: systemContent },
+                    { role: "user", content: userContent },
+                    { role: "assistant", content: assistantContent }
+                ]
+            };
+
+            // Convert JSON object to JSONL string
+            const jsonlString = JSON.stringify(jsonObject);
+
+            // Display the JSONL string in the result div
+            const resultDiv = document.getElementById('result');
+            return `${jsonlString}`;
+}
 
 </script>
 
