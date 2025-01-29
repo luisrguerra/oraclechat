@@ -391,7 +391,7 @@ generateButton.addEventListener("click", async function() {
     modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-4o-mini-v6-epoch4:AoXnkaQS";
     const answer = await generateChatMessages(promptInput, messages);
     const codigoExtraido = extrairTextoCodigo(lastMessage(answer))
-    appendSolutionAttempt(codigoExtraido);
+    appendSolutionAttempt(lastMessage(answer));
     const finalAnswer = ""
     document.getElementById("finalAnswer").textContent = finalAnswer;
     executeCodigo(codigoExtraido);
