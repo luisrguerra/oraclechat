@@ -164,7 +164,7 @@
 import openailib from 'https://cdn.jsdelivr.net/npm/openai@4.10.0/+esm';
 
 let openai;
-let modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-cot2-overfitting:AtZk8FUu";
+let modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-cot-v3-e4:AvWuDmE2";
 let gptTemperature = 1;
 
 /* site source selector */
@@ -424,7 +424,7 @@ generateButton.addEventListener("click", async function() {
     changeButtonTextById("Gerando respostas...", "generate");
     let  messages = initializeChat("Não mostre o output final do código que será mostrado no terminal. Utilize javascript. O código deve ser escrito na íntegra. O código javascript deve evitar o uso de bibliotecas externas ou que precisam ser instaladas. Não realize cálculos sem ser em código javascript. Implemente as operações matemáticas etapa por etapa no código javascript.");
     const promptInput = "Resolva utilizando Chain-of-Thought (CoT) (Thinking) e Javascript:" + getInputText();
-    modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-cot2-overfitting:AtZk8FUu";
+    modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-cot-v3-e4:AvWuDmE2";
     const answer = await generateChatMessages(promptInput, messages);
     let lastMessageText = lastMessage(answer);
     const codigoExtraido = extrairTextoCodigo(lastMessageText)
