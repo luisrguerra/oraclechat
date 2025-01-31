@@ -93,25 +93,25 @@
     <h5>Resposta final:</h5>
     <p id="finalAnswer">Resposta final ainda não gerada.</p>
 
-    <!-- acordiao do resultado da solucao -->
-    <div class="accordion" id="accordionSolution">
+    <!-- acordiao do thinking -->
+    <div class="accordion mt-3" id="accordionThinking">
       <div class="accordion-item">
-        <h2 class="accordion-header" id="heading1">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-            Resposta completa
+        <h2 class="accordion-header" id="heading4">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
+            Resposta escrita
           </button>
         </h2>
         
-        <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionSolution">
+        <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionThinking">
           <div class="accordion-body">
             <div class="accordion-body">
-              <div id="solutionsDiv">
-                <p>Resposta completa não gerada.</p>
+              <div id="thinkingDiv">
+                <p>Resposta escrita não gerada.</p>
               </div>
+              <button class="btn btn-primary" onclick="copyToClipboardThinking()">Copiar</button>
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <!-- acordiao do codigo -->
@@ -136,6 +136,28 @@
       </div>
     </div>
     <!-- fim de acordiao do código -->
+
+    <!-- acordiao do resultado da solucao -->
+    <div class="accordion mt-3" id="accordionSolution">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading1">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+            Resposta completa
+          </button>
+        </h2>
+        
+        <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordionSolution">
+          <div class="accordion-body">
+            <div class="accordion-body">
+              <div id="solutionsDiv">
+                <p>Resposta completa não gerada.</p>
+              </div>
+              <button class="btn btn-primary" onclick="copyToClipboardCompleteSolution()">Copiar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- acordiao do dataset -->
     <div class="accordion mt-3" id="accordionDataset">
@@ -354,18 +376,6 @@ function appendTextToDiv(text, divId) {
     contentElement.appendChild(pElement);
 }
 
-function appendSolutionAttempt(text) {
-    appendTextToDiv(text, "solutionsDiv");
-}
-
-function appendDataset(text) {
-    appendTextToDiv(text, "datasetDiv");
-}
-
-function appendCode(text) {
-    appendTextToDiv(text, "codeDiv");
-}
-
 function clearDiv(divId) {
     const contentElement = document.getElementById(divId);
     contentElement.innerHTML = "";
@@ -381,6 +391,10 @@ function clearDatasetDiv() {
 
 function clearCodeDiv() {
     clearDiv("codeDiv");
+}
+
+function clearThinkingDiv() {
+    clearDiv("thinkingDiv");
 }
 
 function clearFinalAnswer() {
@@ -400,6 +414,19 @@ function getFinalAnswerPrompt(answersAttempts,question){
 
 function extrairTextoCodigo(texto) {
     const regex = /```javascript([^]+?)```/g;
+    const resultados = [];
+    let match;
+
+    while ((match = regex.exec(texto)) !== null) {
+        resultados.push(match[1].trim());
+    }
+
+    return resultados;
+}
+
+function extrairThinking(texto) {
+    //<thinking></thinking>
+    const regex = /<thinking>([^]+?)<\/thinking>/g;
     const resultados = [];
     let match;
 
@@ -455,6 +482,7 @@ generateButton.addEventListener("click", async function() {
     clearDatasetDiv();
     clearFinalAnswer();
     clearCodeDiv();
+    clearThinkingDiv();
     disableButtonById("generate");
     changeButtonTextById("Gerando respostas...", "generate");
     let  messages = initializeChat("Não mostre o output final do código que será mostrado no terminal. Utilize javascript. O código deve ser escrito na íntegra. O código javascript deve evitar o uso de bibliotecas externas ou que precisam ser instaladas. Não realize cálculos sem ser em código javascript. Implemente as operações matemáticas etapa por etapa no código javascript.");
@@ -463,8 +491,10 @@ generateButton.addEventListener("click", async function() {
     const answer = await generateChatMessages(promptInput, messages);
     let lastMessageText = lastMessage(answer);
     const codigoExtraido = extrairTextoCodigo(lastMessageText)
-    appendCode(codigoExtraido);
-    appendSolutionAttempt(lastMessageText);
+    const thinkingExtraido = extrairThinking(lastMessageText)
+    appendTextToDiv(codigoExtraido, "codeDiv");
+    appendTextToDiv(thinkingExtraido, "thinkingDiv");
+    appendTextToDiv(lastMessageText, "solutionsDiv");
     const finalAnswer = ""
     document.getElementById("finalAnswer").textContent = finalAnswer;
     executeCodigo(codigoExtraido);
@@ -474,7 +504,7 @@ generateButton.addEventListener("click", async function() {
     //geracao do dataset
     const dataset = generateJSONL("", promptInput, lastMessageText);
     clearDatasetDiv();
-    appendDataset(dataset);
+    appendTextToDiv(dataset, "datasetDiv");
 });
 
 function generateJSONL(systemContent, userContent, assistantContent) {
@@ -512,6 +542,12 @@ function copyToClipboardDataset() {
 }
 function copyToClipboardCode() {
             copyToClipboard("codeDiv");
+}
+function copyToClipboardCompleteSolution() {
+            copyToClipboard("solutionsDiv");
+}
+function copyToClipboardThinking() {
+            copyToClipboard("thinkingDiv");
 }
 </script>
 

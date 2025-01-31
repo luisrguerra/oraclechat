@@ -30,6 +30,13 @@
     "description": "Como posso te ajudar?"
   },
   {
+    "name":"Math to Code",
+    "redirect":"https://luisrguerra.github.io/oraclechat/mathtocodecot/",
+    "method":"system-prompt",
+    "prompt":"",
+    "description": "Abrindo a o Math to code..."
+  },
+  {
     "name":"Pesquisa Online",
     "redirect":"https://luisrguerra.github.io/oraclechat/online/",
     "method":"system-prompt",
