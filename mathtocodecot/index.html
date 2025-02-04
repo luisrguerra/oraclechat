@@ -182,21 +182,20 @@
     </div>
     <!-- fim de acordiao do dataset -->
 
-    <br>
-
-    <div class="accordion" id="accordionExample" style="display:none">
+    <div class="accordion mt-3" id="accordionOptions">
       <div class="accordion-item">
-        <h2 class="accordion-header" id="heading2">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+        <h2 class="accordion-header" id="heading5">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="true" aria-controls="collapse2">
             Opções
           </button>
         </h2>
-        <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample">
+        <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#accordionOptions">
           <div class="accordion-body">
             <div class="mb-3">
-              <label for="attemptsNumber" class="form-label">Número de buscas:</label>
-              <input type="number" class="form-control" id="attemptsNumber" name="attemptsNumber" min="1" max="3" value="3">
-              <p>O número máximo de buscas é 3.</p>
+              <label for="modelSelect" class="form-label">Modelo:</label>
+              <select class="form-select form-select-lg mb-3 theme" id="modelSelect" style="max-width: 100%;">
+                <option value="ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-cot-v3-e4:AvWuDmE2">gpt-4o-mini-mathtocode-cot-v3-e4</option>
+              </select>
             </div>
           </div>
         </div>
@@ -209,7 +208,7 @@
 import openailib from 'https://cdn.jsdelivr.net/npm/openai@4.10.0/+esm';
 
 let openai;
-let modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-cot-v3-e4:AvWuDmE2";
+let modelName = "";
 let gptTemperature = 1;
 
 /* site source selector */
@@ -476,6 +475,11 @@ function executeCodigo(code) {
   }
 }
 
+function getModelFromSelect() {
+    const selectElement = document.getElementById("modelSelect");
+    return selectElement.value;
+}
+
 const generateButton = document.getElementById("generate");
 generateButton.addEventListener("click", async function() {
     clearSolutionsDiv();
@@ -487,7 +491,7 @@ generateButton.addEventListener("click", async function() {
     changeButtonTextById("Gerando respostas...", "generate");
     let  messages = initializeChat("Não mostre o output final do código que será mostrado no terminal. Utilize javascript. O código deve ser escrito na íntegra. O código javascript deve evitar o uso de bibliotecas externas ou que precisam ser instaladas. Não realize cálculos sem ser em código javascript. Implemente as operações matemáticas etapa por etapa no código javascript.");
     const promptInput = "Resolva utilizando Chain-of-Thought (CoT) (Thinking) e Javascript:" + getInputText();
-    modelName = "ft:gpt-4o-mini-2024-07-18:sapien-ia:mathtocode-cot-v3-e4:AvWuDmE2";
+    modelName = getModelFromSelect();
     const answer = await generateChatMessages(promptInput, messages);
     let lastMessageText = lastMessage(answer);
     const codigoExtraido = extrairTextoCodigo(lastMessageText)
