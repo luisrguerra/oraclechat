@@ -402,7 +402,6 @@
   {
     "name":"Sobre o OracleChat",
     "method":"system-prompt",
-    "model":"meta-llama/Meta-Llama-3.1-70B-Instruct",
     "prompt":"O OracleChat é desenvolvido pelo Luís Guerra, contato do OracleChat: luiseduardoribeiroguerra@gmail.com",
     "description": "O OracleChat é desenvolvido pelo Luís Guerra, caso tenha interesse em ter uma solução personalizada do OracleChat na sua organização entre em contato no email luiseduardoribeiroguerra@gmail.com"
   }
