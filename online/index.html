@@ -138,10 +138,10 @@
 </body>
 
 <script type="module">
-import openailib from 'https://cdn.jsdelivr.net/npm/openai@4.10.0/+esm';
+import openailib from 'https://cdn.jsdelivr.net/npm/openai@4.100.0/+esm';
 
 let openai;
-let modelName = "gpt-4o-mini";
+let modelName = "gpt-4.1-mini";
 let gptTemperature = 1;
 
 /* site source selector */
@@ -209,7 +209,7 @@ function atod(){
 }
 
 function atoe(){
-  const hash = 'ZXlKaGNHbExaWGtpT2lKemF5MXZjaTEyTVMweE1qbGtOMlJqTmpWbE5XTmtNV00zWldWaE5XTTBaakV4T0RBMk16YzBOREJqTnprMk5EQTJPRGRtWXpCbU5qZzFNVFF4T1Rrd09HUm1Oakl4TTJGaUlpd2laR0Z1WjJWeWIzVnpiSGxCYkd4dmQwSnliM2R6WlhJaU9uUnlkV1VzSW1KaGMyVlZVa3dpT2lKb2RIUndjem92TDI5d1pXNXliM1YwWlhJdVlXa3ZZWEJwTDNZeEluME5DZz09DQo=';
+  const hash = 'ZXlKaGNHbExaWGtpT2lKemF5MXZjaTEyTVMwek5qbG1aV0k1TW1VM01ESm1ObUV3T0RFME0yTmpPREU1T0dVMlpqYzVZekUzTlRJM01EQXpPV0poWlRFME1XUXlOR0U1TW1GaE5tVXhOekEyWXpRM0lpd2laR0Z1WjJWeWIzVnpiSGxCYkd4dmQwSnliM2R6WlhJaU9uUnlkV1VzSW1KaGMyVlZVa3dpT2lKb2RIUndjem92TDI5d1pXNXliM1YwWlhJdVlXa3ZZWEJwTDNZeEluMD0=';
   return JSON.parse(ztoa(hash));
 }
 
@@ -374,7 +374,7 @@ generateButton.addEventListener("click", async function() {
     }
     const finalAnswerPrompt = getFinalAnswerPrompt(answersAttempts, getInputText());
     let  messages = initializeChat("Você atuará como um resolvedor de problemas/perguntas e etc..., que poderá utilizar algumas propostas de resultados de buscas na internet para ajudar com a sua resposta, você deve utilizar essas propostas de resultado de busca somente se ela fizer sentido para a resolução do problema.");
-    modelName = "gpt-4o-mini";
+    modelName = "gpt-4.1-mini";
     const finalAnswer = await generateChatMessages(finalAnswerPrompt, messages);
     document.getElementById("finalAnswer").textContent = lastMessage(finalAnswer);
     enableButtonById("generate");
