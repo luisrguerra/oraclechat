@@ -204,11 +204,8 @@ const defaultPrompt = 0;
 const modelList = [
   {name:"Padrão",value:"",architecture:'',maxLength: 0},
   {name:"Google Gemini Flash",value:"google/gemini-flash-1.5",architecture:'openrouter',maxLength: 200000},
-  {name:"Gemini Flash 1.5 Experimental",value:"google/gemini-flash-1.5-exp",architecture:'openrouter',maxLength: 200000},
-  {name:"Gemini Flash 8B 1.5 Experimental",value:"google/gemini-flash-8b-1.5-exp",architecture:'openrouter',maxLength: 200000},
-  {name:"Gemini Pro 1.5 Experimental",value:"google/gemini-pro-1.5-exp",architecture:'openrouter',maxLength: 200000},
-  {name:"Google Gemini Pro 1.5 - MMLU: 81.9",value:"google/gemini-pro-1.5",architecture:'openrouter',maxLength: 200000},
-  {name:"Gemma 2 27B",value:"google/gemma-2-27b-it",architecture:'openrouter',maxLength: 8000},
+  {name:"Gemini 2.5 flash preview 20/5/2025",value:"google/gemini-2.5-flash-preview-05-20",architecture:'openrouter',maxLength: 200000},
+  {name:"Gemma 3 27B",value:"google/gemma-3-27b-it",architecture:'deepinfra',maxLength: 128000},
   {name:"GPT 4.1 Mini",value:"gpt-4.1-mini",architecture:'openai',maxLength: 200000},
   {name:"GPT 4.1 Nano",value:"gpt-4.1-nano",architecture:'openai',maxLength: 200000},
   {name:"GPT 4o Mini",value:"gpt-4o-mini",architecture:'openai',maxLength: 128000},
@@ -218,11 +215,8 @@ const modelList = [
   {name:"GPT 3.5 6/11/23 - MMLU: 71.3",value:"gpt-3.5-turbo-1106",architecture:'openai',maxLength: 4000},
   {name:"Claude 3 Haiku - MMLU: 75.2",value:"anthropic/claude-3-haiku",architecture:'openrouter',maxLength: 100000},
   {name:"DeepSeek V3 0324",value:"deepseek-ai/DeepSeek-V3-0324",architecture:'deepinfra',maxLength: 128000},
-  {name:"Gemma 3 27B",value:"google/gemma-3-27b-it",architecture:'deepinfra',maxLength: 128000},
   {name:"Cohere: Command R (08-2024)",value:"cohere/command-r-08-2024",architecture:'openrouter',maxLength: 128000},
-  {name:"Qwen: QwQ 32B Preview",value:"qwen/qwq-32b-preview",architecture:'openrouter',maxLength: 32000},
-  {name:"Qwen 2.5 Coder 32b Instruct",value:"qwen/qwen-2.5-coder-32b-instruct",architecture:'openrouter',maxLength: 32000},
-  {name:"Qwen 2.5 72b",value:"Qwen/Qwen2.5-72B-Instruct",architecture:'deepinfra',maxLength: 31000},
+  {name:"Qwen 3 235N A22B",value:"qwen/qwen3-235b-a22b",architecture:'openrouter',maxLength: 40000},
   {name:"Nvidia: Llama 3.1 Nemotron 70B Instruct",value:"nvidia/Llama-3.1-Nemotron-70B-Instruct",architecture:'deepinfra',maxLength: 131000},
   {name:"Llama 3.3 70b",value:"meta-llama/Llama-3.3-70B-Instruct-Turbo",architecture:'deepinfra',maxLength: 131000},
   {name:"Llama 3.1 405b instruct",value:"meta-llama/Meta-Llama-3.1-405B-Instruct",architecture:'deepinfra',maxLength: 32000},
@@ -231,14 +225,10 @@ const modelList = [
 ];
 
 /* const modelList = [
-  {name:"openai/o1-mini",value:"openai/o1-mini",architecture:'openrouter',maxLength: 128000},
-  {name:"openai/o1-mini-2024-09-12",value:"openai/o1-mini-2024-09-12",architecture:'openrouter',maxLength: 128000},
   {name:"gpt-4o",value:"gpt-4o",architecture:'openai',maxLength: 128000},
   {name:"gpt-4o-2024-05-13",value:"gpt-4o-2024-05-13",architecture:'openai',maxLength: 128000},
   {name:"gpt-4o-2024-08-06",value:"gpt-4o-2024-08-06",architecture:'openai',maxLength: 128000},
   {name:"chatgpt-4o-latest",value:"chatgpt-4o-latest:'openai',maxLength: 128000},
-  {name:"Claude 3.5 Sonnet",value:"anthropic/claude-3.5-sonnet",architecture:'openrouter',maxLength: 200000},
-  {name:"Claude 3 Opus - MMLU: 86.8",value:"anthropic/claude-3-opus",architecture:'openrouter',maxLength: 200000},
 ]; */
 
 const modeList = [
