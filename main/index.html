@@ -74,6 +74,10 @@
  <button id="btnTextToSpeech" class="btn btn-outline-light prompt-button">
   <span id="iconTextToSpeech" class="mdi mdi-volume-off"> <span class="unnecessary-text">Voz</span></span>
  </button>
+<!-- button activate formatting -->
+<button id="btnDisableFormatting" class="btn btn-outline-light prompt-button prompt-button-posterior unnecessary-text">
+  <span id="iconDisableFormatting" class="mdi mdi-format-title"> <span class="unnecessary-text">Formatação</span></span>
+</button>
  <!-- clear message chat button -->
  <button id="btnClearChat" class="btn btn-outline-light prompt-button prompt-button-posterior">
   <span class="mdi mdi-delete"> <span class="unnecessary-text">Apagar</span></span>
@@ -194,6 +198,7 @@ let mensagesObject;
 let loading = false;
 let expandedChatInput = false;
 let textToSpeechEnabled = false;
+let isFormattingEnabled = true;
 let promptMethod = "system-prompt";
 let currentPrompt='';
 let currentPromptNumber='';
@@ -707,17 +712,27 @@ function renderLatexInString(inputString) {
 
 function appendChatUser(text){
   const container = document.getElementById("terminalContainer");
-  let p = renderLatexInString(text);
-  p.classList.add("chatUser");
-  container.appendChild(p);
+  let paragraphChatUser = document.createElement("p");
+  if (isFormattingEnabled === false){
+    paragraphChatUser.innerText = text;
+  }else{
+    paragraphChatUser = renderLatexInString(text);
+  }
+  paragraphChatUser.classList.add("chatUser");
+  container.appendChild(paragraphChatUser);
   scrollToBottom("scroll");
 }
 
 function appendChatBot(text){
   const container = document.getElementById("terminalContainer");
-  let p = renderLatexInString(text);
-  p.classList.add("chatBot");
-  container.appendChild(p);
+  let paragraphChatBot = document.createElement("p");
+  if (isFormattingEnabled === false){
+    paragraphChatBot.innerText = text;
+  }else{
+    paragraphChatBot = renderLatexInString(text);
+  }
+  paragraphChatBot.classList.add("chatBot");
+  container.appendChild(paragraphChatBot);
   scrollToBottom("scroll");
 }
 
@@ -743,6 +758,7 @@ function disableUserInteraction(){
   disableByID("btnRegenerate");
   disableByID("btnExpand");
   disableByID("btnTextToSpeech")
+  disableByID("btnDisableFormatting");
   disableByID("btnClearChat");
   disableByID("promptMenuButton");
   disableByID("btnVerifyInformation");
@@ -756,6 +772,7 @@ function enableUserInteraction(){
   enableByID("btnRegenerate");
   enableByID("btnExpand");
   enableByID("btnTextToSpeech")
+  enableByID("btnDisableFormatting");
   enableByID("btnClearChat");
   enableByID("promptMenuButton");
   enableByID("btnVerifyInformation");
@@ -837,6 +854,15 @@ function disableTextToSpeech(){
   );
 };
 
+function disableFormatting(){
+  isFormattingEnabled = false;
+  replaceClassByID(
+    /*id:*/ "iconDisableFormatting",
+    /*oldClass:*/ "mdi-format-title",
+    /*newClass:*/ "mdi-format-clear"
+  );
+};
+
 //expand the size of the message input area
 function expandChatInput(){
   expandedChatInput = true;
@@ -859,6 +885,15 @@ function enableTextToSpeech(){
     /*id:*/ "iconTextToSpeech",
     /*oldClass:*/ "mdi-volume-off",
     /*newClass:*/ "mdi-volume-high"
+  );
+};
+
+function enableFormatting(){
+  isFormattingEnabled = true;
+  replaceClassByID(
+    /*id:*/ "iconDisableFormatting",
+    /*oldClass:*/ "mdi-format-clear",
+    /*newClass:*/ "mdi-format-title"
   );
 };
 
@@ -947,6 +982,18 @@ async function onClickTextToSpeechButton(){
   });
 }
 onClickTextToSpeechButton();
+
+async function onClickDisableFormattingButton(){
+  const button = document.getElementById('btnDisableFormatting');
+  button.addEventListener('click', async () => {
+    if (isFormattingEnabled === true){
+      disableFormatting();
+    }else{
+      enableFormatting();
+    }
+  });
+}
+onClickDisableFormattingButton();
 
 
 /* End of event listener functions */
