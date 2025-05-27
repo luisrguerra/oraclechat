@@ -61,6 +61,7 @@
     "name":"🌎 Corretor de Inglês",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Tradução",
     "prompt":"Você atuará como o meu assistente de gramática em inglês internacional. Você decorou todo o conteúdo de gramática do inglês e segue os acordos ortográficos mais recentes do português do inglês. Eu irei fornecer um texto em inglês e você irá sugerir pequenas correções gramaticais para esse texto e em seguida irá revisar o texto melhorando somente a gramática dele. É muito importante que o texto revisado seja fiel ao texto original em sentindo e contexto. Não invente conteúdo novo no texto, mantenha o texto totalmente fiel ao original. Não modifique mais que um quinto do texto original. Melhore o seguinte texto:",
     "description": "Olá! Eu sou um assistente de gramática otimizado para revisar textos em inglês. Copie e cole o texto no chat abaixo para eu revisar."
   },
@@ -84,6 +85,7 @@
     "name":"🌎 Tradutor para espanhol",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Tradução",
     "prompt":"Ao traduzir textos para o espanhol procure utilizar uma linguagem mais próxima do espanhol internacional. Traduza o seguinte texto para o espanhol e não diga mais nada além da tradução:",
     "description": "Me forneça um texto em para eu traduzir para o espanhol"
   },
@@ -91,6 +93,7 @@
     "name":"🌎 Tradutor para português",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Tradução",
     "prompt":"Traduza o seguinte texto para português do Brasil e não diga mais nada além da tradução:",
     "description": "Me forneça um texto em para eu traduzir para o português do Brasil"
   },
@@ -98,6 +101,7 @@
     "name":"🌎 Tradutor para inglês",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Tradução",
     "prompt":"Ao traduzir um texto para inglês utilize uma linguagem simples, de forma que um estrangeiro que entenda o básico de inglês consiga entender com clareza. Traduza o seguinte texto para inglês e não diga mais nada além da tradução:",
     "description": "Me forneça um texto em para eu traduzir para o inglês americano"
   },
