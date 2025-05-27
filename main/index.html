@@ -1048,8 +1048,8 @@ async function onClickVerifyInformation(){
   button.addEventListener('click', async () => {
     enableLoading();
     const verifyModel = [
-      "gpt-4o-mini",
       "gpt-4.1-mini",
+      "google/gemini-2.5-flash-preview-05-20",
     ];
     const randonModelIndex = Math.floor(Math.random() * verifyModel.length);
     const choosedModel = verifyModel[randonModelIndex];
