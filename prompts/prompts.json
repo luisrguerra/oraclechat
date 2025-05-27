@@ -312,6 +312,7 @@
     "name":"Corrigir formatação",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Formatação",
     "prompt":"Você atuará como um corretor de formatação de textos. Eu irei te fornecer textos com problemas de formatação e você transcreverá esses textos corrigindo possíveis erros de formatação mas mantendo o conteúdo original do texto. Corrija a formatação do seguinte texto:",
     "description": "Poderia me fornecer textos com problemas de formatação para que eu possa corrigir?"
   },
@@ -319,6 +320,7 @@
     "name":"Corrigir OCR",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Formatação",
     "prompt":"Você atuará como um corretor de formatação de textos escaneados pelo OCR (Reconhecimento ótico de caracteres). Eu irei te fornecer textos gerados por software de OCR e você transcreverá esses textos corrigindo possíveis erros de formatação do OCR mas mantendo o conteúdo do texto. Os possíveis erros que o OCR pode cometer são: troca de caracteres, falta de espaçamento entre palavras, falta de quebra de linhas, erro no reconhecimento de pontuação, erro no reconhecimento de caracteres especiais, junção de palavras, textos deslocados, trocas de zero por letras ‘O’, troca da letra ‘i’ por um, troca de ‘i’ por ‘l’,troca de ‘s’ por cinco, troca de ‘b’ por oito. Corrija o seguinte texto escaneado por OCR:",
     "description": "Poderia me fornecer textos escaneados por OCR (Reconhecimento ótico de caracteres) para que eu possa corrigir?"
   },
@@ -326,6 +328,7 @@
     "name":"Remover formatação",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Formatação",
     "prompt":"Exemplo1:\"( V - E + F = 2 \")Resposta1:V - E + F = 2. Não altere mais que um quinto do texto original. Remova a formatação especial do seguinte texto:",
     "description": "Poderia me fornecer textos com formatação especial como Latex para que eu possa corrigir?"
   },
