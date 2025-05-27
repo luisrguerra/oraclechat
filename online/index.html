@@ -233,8 +233,8 @@ async function completionsChatTextModel(messages) {
     openai = new openailib(atod());
   }else if(
       modelName == "anthropic/claude-3-haiku" ||
-      modelName == "google/gemini-pro" ||
-      modelName == "cohere/command-r" ||
+      modelName == "google/gemini-2.5-flash-preview-05-20" ||
+      modelName == "perplexity/sonar" ||
       modelName == "perplexity/llama-3.1-sonar-large-128k-online" ||
       modelName == "qwen/qwen-72b-chat"
     ){
@@ -354,6 +354,8 @@ function getFinalAnswerPrompt(answersAttempts,question){
 function randomModel(){
   const models = [
     "perplexity/llama-3.1-sonar-large-128k-online",
+    "perplexity/sonar",
+    "google/gemini-2.5-flash-preview-05-20"
   ];
   const randomIndex = Math.floor(Math.random() * models.length);
   modelName = models[randomIndex];
