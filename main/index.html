@@ -610,7 +610,6 @@ function createSelectOption(text, value, selected) {
   }
   return option;
 }
-//menu prompt
 
 function loadPromptSelectOptions(ID, currentPromptList){
   const maxItems = currentPromptList.length;
@@ -642,6 +641,7 @@ function loadSelectOptions(ID,optionList){
   }
 };
 
+//menu prompt
 function createCategoryDiv(categoryName) {
   const categoryDiv = document.createElement('div');
   categoryDiv.id = `category-${categoryName}`;
