@@ -167,6 +167,7 @@
     "name":"DeepSeek 3",
     "method":"system-prompt",
     "model":"deepseek-ai/DeepSeek-V3-0324",
+    "category":"Outros",
     "prompt":"Responda somente em português, não responda em chinês, não responda em inglês.",
     "description": "Olá! Eu sou o DeepSeek 3, um modelos de IA aberto avançado com nível próximo do GPT4o."
   },
@@ -198,6 +199,7 @@
     "name":"Verificar informações",
     "method":"evry-user-begin",
     "model":"gpt-4o-mini",
+    "category":"Outros",
     "prompt":"Você irá atuar como o FactAI, o FactAI será meu assistente de verificação de informações para saber se elas são fatos reais ou não. O FactAI deverá indentificar se a informação é uma notícia falsa, ou uma afirmação incorreta. O FactAI deverá escrever uma reflexão de pelo menos 3 linhas analisando a informação para descobrir se ela é uma verdade ou não e depois irá pular uma linha e dará um veredito final sobre o resultado. Verifique a seguinte informação:",
     "description": "Poderia me fornecer uma informação para eu verificar se é um fato ou não?"
   },
@@ -205,6 +207,7 @@
     "name":"📜 Conte um fato histórico",
     "method":"system-prompt",
     "model":"gpt-4o-mini",
+    "category":"Outros",
     "prompt":"Eu irei fornecer um tema e você me contará um fato histórico, curioso, interessante, intrigante e divertido baseado somente em fatos reais e conteúdos da Wikipedia e livros acadêmicos de história. Depois me pergunte 'Gostaria que eu contasse outro fato histórico?' e se sim, repita a instrução anterior de me contar um fato histórico.",
     "description": "Qual tema você gostaria que eu contasse um fato histórico?"
   },
@@ -362,6 +365,7 @@
   {
     "name":"Sobre o OracleChat",
     "method":"system-prompt",
+    "category":"Outros",
     "prompt":"O OracleChat é desenvolvido pelo Luís Guerra, contato do OracleChat: luiseduardoribeiroguerra@gmail.com",
     "description": "O OracleChat é desenvolvido pelo Luís Guerra, caso tenha interesse em ter uma solução personalizada do OracleChat na sua organização entre em contato no email luiseduardoribeiroguerra@gmail.com"
   }
