@@ -6,6 +6,9 @@
   --button-border-color-selected: #ffffff7e;
   --prompt-background-color: hsl(218, 14%, 16%);
   --chat-background-color: hsl(213, 13%, 14%);
+  --bs-body-bg: hsl(213, 13%, 14%);
+  --bs-body-color: #c9d3e3;
+  --bs-border-color:#ffffff40;
 }
 
 body{
@@ -119,6 +122,10 @@ textarea.form-control:focus,textarea.form-control:active{
   border-color: #ffffff7e;
 }
 
+.form-control,.accordion-button{
+      box-shadow: none!important;
+    }
+
 div.theme.modal-header{
   border-color: var(--prompt-border-color);
 }
@@ -137,4 +144,17 @@ button.list-group-item{
 button.list-group-item:hover{
   background-color: var(--chat-background-color);
   border: 1px solid var(--button-border-color-selected);
+}
+
+.accordion-button{
+  color: var(--font-color);
+  background-color: var(--prompt-background-color);
+}
+.accordion-button:hover, .accordion-button:focus, .accordion-button:active, .accordion-button:not(.collapsed) {
+  color: var(--font-color);
+  background-color: var(--chat-background-color);
+}
+
+button.accordion-button::after{
+  filter: brightness(0) saturate(100%) invert(100%);
 }

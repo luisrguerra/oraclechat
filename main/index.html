@@ -375,11 +375,6 @@ function updateTemperature(){
   console.log("Updated temperature to:", gptTemperature);
 };
 
-function updatePromptSelectList(){
-  currentPromptList = promptsList;
-  loadPromptSelectOptions('promptSelect',currentPromptList);
-}
-
 function promptSelectUpdateBehavior(){
   interruptTextToSpeech();
   updateTemperature();
@@ -611,21 +606,6 @@ function createSelectOption(text, value, selected) {
   return option;
 }
 
-function loadPromptSelectOptions(ID, currentPromptList){
-  const maxItems = currentPromptList.length;
-  const promptSelect = document.getElementById(ID);
-  promptSelect.innerHTML = "";
-  for (let i = 0; i < maxItems; i++) {
-    const name = currentPromptList[i].name;
-    let selected = false;
-    if(i==0){
-      selected = true;
-    }
-    const option = createSelectOption(name, i, selected);
-    promptSelect.appendChild(option);
-  }
-}
-
 function loadSelectOptions(ID,optionList){
   const maxItems = optionList.length;
   const Selectelement = document.getElementById(ID);
@@ -642,40 +622,83 @@ function loadSelectOptions(ID,optionList){
 };
 
 //menu prompt
-function createCategoryDiv(categoryName) {
-  const categoryDiv = document.createElement('div');
-  categoryDiv.id = `category-${categoryName}`;
-  categoryDiv.classList.add('list-group');
-  categoryDiv.style.width = '100%';
-  const categoryTitle = document.createElement('h5');
-  categoryTitle.style.marginTop = '0.5em';
-  categoryTitle.innerText = categoryName;
-  categoryDiv.appendChild(categoryTitle);
-  return categoryDiv;
+function createAccordionOfCategory(category) {
+  if (typeof category !== 'string' || category.trim() === '') {
+    throw new Error('O parâmetro "category" deve ser uma string não vazia.');
+  }
+
+  const sanitizedCategory = category.trim();
+
+  const getElementId = (type) => `${type}-${sanitizedCategory}`;
+
+  const accordionHtml = `
+    <div class="accordion" 
+    id="accordion-${sanitizedCategory}"
+    >
+      <div class="accordion-item" style="border-radius: 0px;">
+        <h2 
+         class="accordion-header" 
+         id="${getElementId('heading')}"
+        >
+          <button
+            class="accordion-button collapsed text-center"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#${getElementId('collapse')}"
+            aria-expanded="false"
+            style="padding: 1em;font-size: 20px;"
+            aria-controls="${getElementId('collapse')}"
+          >
+            ${sanitizedCategory}
+          </button>
+        </h2>
+        <div
+          id="${getElementId('collapse')}"
+          class="accordion-collapse collapse"
+          aria-labelledby="${getElementId('heading')}"
+          data-bs-parent="#promptListCategoriesAtWindow"
+        >
+          <div class="accordion-body" style="padding: unset;" id="category-${sanitizedCategory}"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = accordionHtml;
+
+  return wrapper.firstElementChild;
 }
 
 function createPromptButton(name, index) {
-  const promptSelectionItemButton = document.createElement("button");
-  promptSelectionItemButton.classList.add("list-group-item", "list-group-action");
-  promptSelectionItemButton.innerText = name;
-  promptSelectionItemButton.setAttribute("data-bs-dismiss", "modal");
-  promptSelectionItemButton.onclick = function() {
+  const button = document.createElement("button");
+  button.innerText = name;
+  button.classList.add("list-group-item", "list-group-action");
+  button.setAttribute("data-bs-dismiss", "modal");
+  button.style.width = "100%";
+  button.onclick = function() {
     initializeAsPrompt(index);
   };
-  return promptSelectionItemButton;
+  return button;
 }
 
 function appendOptionToCategory(option, index, categoriesContainer) {
-  const categoryId = `category-${option.category}`;
-  let categoryDiv = document.getElementById(categoryId);
+  const categoryBody = getCategoryBody(option.category, categoriesContainer);
+  const promptButton = createPromptButton(option.name, index);
+  categoryBody.appendChild(promptButton);
+}
 
-  if (!categoryDiv) {
-    categoryDiv = createCategoryDiv(option.category);
-    categoriesContainer.appendChild(categoryDiv);
+function getCategoryBody(categoryName, container) {
+  const categoryId = `category-${categoryName}`;
+  let categoryBody = document.getElementById(categoryId);
+
+  if (!categoryBody) {
+    const accordion = createAccordionOfCategory(categoryName);
+    container.appendChild(accordion);
+    categoryBody = accordion.querySelector(`#${categoryId}`);
   }
 
-  const button = createPromptButton(option.name, index);
-  categoryDiv.appendChild(button);
+  return categoryBody;
 }
 
 function loadPromptListOptions(ungroupedContainerId, groupedContainerId,options){
