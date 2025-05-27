@@ -179,8 +179,8 @@
    </div>
     <!-- modal body, main content of modal -->
    <div class="modal-body">
-     <div class="list-group" id="promptListAtWindow">
-     </div>
+     <div class="list-group" id="promptListAtWindow"></div>
+     <div class="list-group" id="promptListCategoriesAtWindow"></div>
    </div>
    </div> <!-- modal-content -->
   </div> <!-- modal-dialog -->
@@ -286,7 +286,7 @@ function ztoa(x){
 loadSelectOptions('modelSelect',modelList);
 loadSelectOptions('modelMode',modeList);
 loadSelectOptions('voiceModelSelect',voiceModelList);
-loadPromptListOptions('promptListAtWindow',currentPromptList);
+loadPromptListOptions('promptListAtWindow','promptListCategoriesAtWindow',currentPromptList);
 updateTemperature();
 initializeAsPrompt(defaultPrompt);
 
@@ -610,6 +610,7 @@ function createSelectOption(text, value, selected) {
   }
   return option;
 }
+//menu prompt
 
 function loadPromptSelectOptions(ID, currentPromptList){
   const maxItems = currentPromptList.length;
@@ -641,27 +642,57 @@ function loadSelectOptions(ID,optionList){
   }
 };
 
-function loadPromptListOptions(ID,optionList){
-  const maxItems = optionList.length;
-  const promptListDiv = document.getElementById(ID);
-  for (let i = 0; i < maxItems; i++) {
-    const name = optionList[i].name;
-    const value = optionList[i].value;
-    let selected = false;
-    if(i==0){
-      selected = true;
-    }
-    const promptSelectionItemButton = document.createElement("button");
-    promptSelectionItemButton.classList.add("list-group-item");
-    promptSelectionItemButton.classList.add("list-group-action");
-    promptSelectionItemButton.innerText = name;
-    promptSelectionItemButton.setAttribute("data-bs-dismiss", "modal");
-    promptSelectionItemButton.onclick = function() {
-      initializeAsPrompt(i);
-    };
-    promptListDiv.appendChild(promptSelectionItemButton);
+function createCategoryDiv(categoryName) {
+  const categoryDiv = document.createElement('div');
+  categoryDiv.id = `category-${categoryName}`;
+  categoryDiv.classList.add('list-group');
+  categoryDiv.style.width = '100%';
+  const categoryTitle = document.createElement('h5');
+  categoryTitle.style.marginTop = '0.5em';
+  categoryTitle.innerText = categoryName;
+  categoryDiv.appendChild(categoryTitle);
+  return categoryDiv;
+}
+
+function createPromptButton(name, index) {
+  const promptSelectionItemButton = document.createElement("button");
+  promptSelectionItemButton.classList.add("list-group-item", "list-group-action");
+  promptSelectionItemButton.innerText = name;
+  promptSelectionItemButton.setAttribute("data-bs-dismiss", "modal");
+  promptSelectionItemButton.onclick = function() {
+    initializeAsPrompt(index);
+  };
+  return promptSelectionItemButton;
+}
+
+function appendOptionToCategory(option, index, categoriesContainer) {
+  const categoryId = `category-${option.category}`;
+  let categoryDiv = document.getElementById(categoryId);
+
+  if (!categoryDiv) {
+    categoryDiv = createCategoryDiv(option.category);
+    categoriesContainer.appendChild(categoryDiv);
   }
+
+  const button = createPromptButton(option.name, index);
+  categoryDiv.appendChild(button);
+}
+
+function loadPromptListOptions(ungroupedContainerId, groupedContainerId,options){
+  const container = document.getElementById(ungroupedContainerId);
+  const categoriesContainer = document.getElementById(groupedContainerId);
+
+  options.forEach((option, index) => {
+    if (!option.category) {
+      const button = createPromptButton(option.name, index);
+      container.appendChild(button);
+    } else {
+      appendOptionToCategory(option, index, categoriesContainer);
+    }
+  });
 };
+
+// fim de menu prompt
 
 
 function getValueByID(id){
