@@ -208,6 +208,7 @@ let promptPreferedModel = "";
 const defaultPrompt = 0;
 const modelList = [
   {name:"Padrão",value:"",architecture:'',maxLength: 0},
+  {name:"Gemini 2.5 Flash Preview 09-2025",value:"google/gemini-2.5-flash-preview-09-2025",architecture:'openrouter',maxLength: 200000},
   {name:"Gemini 2.5 Flash",value:"google/gemini-2.5-flash",architecture:'openrouter',maxLength: 200000},
   {name:"Gemini 2.5 Flash Lite",value:"google/gemini-2.5-flash-lite",architecture:'openrouter',maxLength: 200000},
   {name:"Gemma 3 27B",value:"google/gemma-3-27b-it",architecture:'deepinfra',maxLength: 128000},
@@ -216,7 +217,8 @@ const modelList = [
   {name:"GPT 4.1 Mini",value:"gpt-4.1-mini",architecture:'openai',maxLength: 200000},
   {name:"GPT 4.1 Nano",value:"gpt-4.1-nano",architecture:'openai',maxLength: 200000},
   {name:"GPT 4o Mini",value:"gpt-4o-mini",architecture:'openai',maxLength: 128000},
-  {name:"Grok 3 Mini Beta",value:"x-ai/grok-3-mini-beta",architecture:'openrouter',maxLength: 131000},
+  {name:"Grok Code Fast 1",value:"x-ai/grok-code-fast-1",architecture:'openrouter',maxLength: 300000},
+  {name:"Grok 4.1 Fast",value:"x-ai/grok-4.1-fast",architecture:'openrouter',maxLength: 300000},
   {name:"Mistral Medium 3",value:"mistralai/mistral-medium-3",architecture:'openrouter',maxLength: 131000},
   {name:"Claude 3 Haiku - MMLU: 75.2",value:"anthropic/claude-3-haiku",architecture:'openrouter',maxLength: 100000},
   {name:"Qwen3 235B A22B Instruct 2507",value:"Qwen/Qwen3-235B-A22B-Instruct-2507",architecture:'deepinfra',maxLength: 262000},
@@ -229,6 +231,7 @@ const modelList = [
 ];
 
 /* const modelList = [
+  {name:"Gemini 3 Pro Preview",value:"google/gemini-3-pro-preview",architecture:'openrouter',maxLength: 300000},
   {name:"ChatGPT 4o Latest",value:"chatgpt-4o-latest",architecture:'openai',maxLength: 128000},
   {name:"GPT 4o 20/11/2024",value:"gpt-4o-2024-11-20",architecture:'openai',maxLength: 128000},
   {name:"GPT 4o 6/8/2024",value:"gpt-4o-2024-08-06",architecture:'openai',maxLength: 128000},
