@@ -74,6 +74,10 @@
  <button id="btnTextToSpeech" class="btn btn-outline-light prompt-button">
   <span id="iconTextToSpeech" class="mdi mdi-volume-off"> <span class="unnecessary-text">Voz</span></span>
  </button>
+<!-- button activate formatting -->
+<button id="btnDisableFormatting" class="btn btn-outline-light prompt-button prompt-button-posterior unnecessary-text">
+  <span id="iconDisableFormatting" class="mdi mdi-format-title"> <span class="unnecessary-text">Formatação</span></span>
+</button>
  <!-- clear message chat button -->
  <button id="btnClearChat" class="btn btn-outline-light prompt-button prompt-button-posterior">
   <span class="mdi mdi-delete"> <span class="unnecessary-text">Apagar</span></span>
@@ -175,8 +179,8 @@
    </div>
     <!-- modal body, main content of modal -->
    <div class="modal-body">
-     <div class="list-group" id="promptListAtWindow">
-     </div>
+     <div class="list-group" id="promptListAtWindow"></div>
+     <div class="list-group" id="promptListCategoriesAtWindow"></div>
    </div>
    </div> <!-- modal-content -->
   </div> <!-- modal-dialog -->
@@ -194,6 +198,7 @@ let mensagesObject;
 let loading = false;
 let expandedChatInput = false;
 let textToSpeechEnabled = false;
+let isFormattingEnabled = true;
 let promptMethod = "system-prompt";
 let currentPrompt='';
 let currentPromptNumber='';
@@ -203,23 +208,31 @@ let promptPreferedModel = "";
 const defaultPrompt = 0;
 const modelList = [
   {name:"Padrão",value:"",architecture:'',maxLength: 0},
-  {name:"Gemini 2.5 Flash Thinking preview 20/5/2025",value:"google/gemini-2.5-flash-preview-05-20:thinking",architecture:'openrouter',maxLength: 200000},
-  {name:"Gemini 2.5 Flash preview 20/5/2025",value:"google/gemini-2.5-flash-preview-05-20",architecture:'openrouter',maxLength: 200000},
-  {name:"Gemini 2.0 Flash",value:"google/gemini-2.0-flash-001",architecture:'openrouter',maxLength: 200000},
-  {name:"Gemini 2.0 Flash Lite",value:"google/gemini-2.0-flash-lite-001",architecture:'openrouter',maxLength: 200000},
+  {name:"Gemini 2.5 Flash Preview 09-2025",value:"google/gemini-2.5-flash-preview-09-2025",architecture:'openrouter',maxLength: 200000},
+  {name:"Gemini 2.5 Flash",value:"google/gemini-2.5-flash",architecture:'openrouter',maxLength: 200000},
+  {name:"Gemini 2.5 Flash Lite",value:"google/gemini-2.5-flash-lite",architecture:'openrouter',maxLength: 200000},
   {name:"Gemma 3 27B",value:"google/gemma-3-27b-it",architecture:'deepinfra',maxLength: 128000},
+  {name:"GPT OSS 120B",value:"openai/gpt-oss-120b",architecture:'deepinfra',maxLength: 131000},
+  {name:"GPT OSS 20B",value:"openai/gpt-oss-20b",architecture:'deepinfra',maxLength: 131000},
+  {name:"GPT 5.1 Codex Mini",value:"openai/gpt-5.1-codex-mini",architecture:'openrouter',maxLength: 400000},
+  {name:"GPT 5 Mini",value:"openai/gpt-5-mini",architecture:'openrouter',maxLength: 400000},
   {name:"GPT 4.1 Mini",value:"gpt-4.1-mini",architecture:'openai',maxLength: 200000},
   {name:"GPT 4.1 Nano",value:"gpt-4.1-nano",architecture:'openai',maxLength: 200000},
   {name:"GPT 4o Mini",value:"gpt-4o-mini",architecture:'openai',maxLength: 128000},
-  {name:"Grok 3 Mini Beta",value:"x-ai/grok-3-mini-beta",architecture:'openrouter',maxLength: 131000},
+  {name:"Grok Code Fast 1",value:"x-ai/grok-code-fast-1",architecture:'openrouter',maxLength: 300000},
+  {name:"Grok 4.1 Fast",value:"x-ai/grok-4.1-fast",architecture:'openrouter',maxLength: 300000},
   {name:"Mistral Medium 3",value:"mistralai/mistral-medium-3",architecture:'openrouter',maxLength: 131000},
   {name:"Claude 3 Haiku - MMLU: 75.2",value:"anthropic/claude-3-haiku",architecture:'openrouter',maxLength: 100000},
+  {name:"Qwen3 235B A22B Instruct 2507",value:"Qwen/Qwen3-235B-A22B-Instruct-2507",architecture:'deepinfra',maxLength: 262000},
+  {name:"Kimi K2 Thinking",value:"moonshotai/Kimi-K2-Thinking",architecture:'deepinfra',maxLength: 262000},
+  {name:"Kimi K2 Instruct 0905",value:"moonshotai/Kimi-K2-Instruct-0905",architecture:'deepinfra',maxLength: 262000},
+  {name:"MiniMax M2",value:"MiniMaxAI/MiniMax-M2",architecture:'deepinfra',maxLength: 262000},
   {name:"DeepSeek V3 0324",value:"deepseek-ai/DeepSeek-V3-0324",architecture:'deepinfra',maxLength: 163000},
-  {name:"DeepSeek Prover V2 671B",value:"deepseek-ai/DeepSeek-Prover-V2-671B",architecture:'deepinfra',maxLength: 163000},
-  {name:"Qwen 3 235N A22B",value:"Qwen/Qwen3-235B-A22B",architecture:'deepinfra',maxLength: 40000},
-  {name:"Llama 4 Maverick 17B 128E",value:"meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",architecture:'deepinfra',maxLength: 200000},
   {name:"Perplexity Sonar",value:"perplexity/sonar",architecture:'openrouter',maxLength: 127000},
   {name:"mathcode-gpt-4o-mini",value:"ft:gpt-4o-mini-2024-07-18:sapien-ia:mathcode:A1MudjBI",architecture:'openai',maxLength: 128000},
+  {name:"Gemini 3 Pro Preview",value:"google/gemini-3-pro-preview",architecture:'openrouter',maxLength: 300000},
+  {name:"GPT-5.1",value:"openai/gpt-5.1",architecture:'openrouter',maxLength: 400000},
+  {name:"GPT-5.1 Chat",value:"openai/gpt-5.1-chat",architecture:'openrouter',maxLength: 128000},
   {name:"ChatGPT 4o Latest",value:"chatgpt-4o-latest",architecture:'openai',maxLength: 128000},
   {name:"GPT 4o 20/11/2024",value:"gpt-4o-2024-11-20",architecture:'openai',maxLength: 128000},
   {name:"GPT 4o 6/8/2024",value:"gpt-4o-2024-08-06",architecture:'openai',maxLength: 128000},
@@ -228,6 +241,9 @@ const modelList = [
 ];
 
 /* const modelList = [
+  {name:"Gemini 3 Pro Preview",value:"google/gemini-3-pro-preview",architecture:'openrouter',maxLength: 300000},
+  {name:"GPT-5.1",value:"openai/gpt-5.1",architecture:'openrouter',maxLength: 400000},
+  {name:"GPT-5.1 Chat",value:"openai/gpt-5.1-chat",architecture:'openrouter',maxLength: 128000},
   {name:"ChatGPT 4o Latest",value:"chatgpt-4o-latest",architecture:'openai',maxLength: 128000},
   {name:"GPT 4o 20/11/2024",value:"gpt-4o-2024-11-20",architecture:'openai',maxLength: 128000},
   {name:"GPT 4o 6/8/2024",value:"gpt-4o-2024-08-06",architecture:'openai',maxLength: 128000},
@@ -286,7 +302,7 @@ function ztoa(x){
 loadSelectOptions('modelSelect',modelList);
 loadSelectOptions('modelMode',modeList);
 loadSelectOptions('voiceModelSelect',voiceModelList);
-loadPromptListOptions('promptListAtWindow',currentPromptList);
+loadPromptListOptions('promptListAtWindow','promptListCategoriesAtWindow',currentPromptList);
 updateTemperature();
 initializeAsPrompt(defaultPrompt);
 
@@ -374,11 +390,6 @@ function updateTemperature(){
   gptTemperature = getModelMode();
   console.log("Updated temperature to:", gptTemperature);
 };
-
-function updatePromptSelectList(){
-  currentPromptList = promptsList;
-  loadPromptSelectOptions('promptSelect',currentPromptList);
-}
 
 function promptSelectUpdateBehavior(){
   interruptTextToSpeech();
@@ -611,21 +622,6 @@ function createSelectOption(text, value, selected) {
   return option;
 }
 
-function loadPromptSelectOptions(ID, currentPromptList){
-  const maxItems = currentPromptList.length;
-  const promptSelect = document.getElementById(ID);
-  promptSelect.innerHTML = "";
-  for (let i = 0; i < maxItems; i++) {
-    const name = currentPromptList[i].name;
-    let selected = false;
-    if(i==0){
-      selected = true;
-    }
-    const option = createSelectOption(name, i, selected);
-    promptSelect.appendChild(option);
-  }
-}
-
 function loadSelectOptions(ID,optionList){
   const maxItems = optionList.length;
   const Selectelement = document.getElementById(ID);
@@ -641,27 +637,101 @@ function loadSelectOptions(ID,optionList){
   }
 };
 
-function loadPromptListOptions(ID,optionList){
-  const maxItems = optionList.length;
-  const promptListDiv = document.getElementById(ID);
-  for (let i = 0; i < maxItems; i++) {
-    const name = optionList[i].name;
-    const value = optionList[i].value;
-    let selected = false;
-    if(i==0){
-      selected = true;
-    }
-    const promptSelectionItemButton = document.createElement("button");
-    promptSelectionItemButton.classList.add("list-group-item");
-    promptSelectionItemButton.classList.add("list-group-action");
-    promptSelectionItemButton.innerText = name;
-    promptSelectionItemButton.setAttribute("data-bs-dismiss", "modal");
-    promptSelectionItemButton.onclick = function() {
-      initializeAsPrompt(i);
-    };
-    promptListDiv.appendChild(promptSelectionItemButton);
+//menu prompt
+function createAccordionOfCategory(category) {
+  if (typeof category !== 'string' || category.trim() === '') {
+    throw new Error('O parâmetro "category" deve ser uma string não vazia.');
   }
+
+  const sanitizedCategory = category.trim();
+
+  const getElementId = (type) => `${type}-${sanitizedCategory}`;
+
+  const accordionHtml = `
+    <div class="accordion" 
+    id="accordion-${sanitizedCategory}"
+    >
+      <div class="accordion-item" style="border-radius: 0px;">
+        <h2 
+         class="accordion-header" 
+         id="${getElementId('heading')}"
+        >
+          <button
+            class="accordion-button collapsed text-center"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#${getElementId('collapse')}"
+            aria-expanded="false"
+            style="padding: 1em;font-size: 20px;"
+            aria-controls="${getElementId('collapse')}"
+          >
+            ${sanitizedCategory}
+          </button>
+        </h2>
+        <div
+          id="${getElementId('collapse')}"
+          class="accordion-collapse collapse"
+          aria-labelledby="${getElementId('heading')}"
+          data-bs-parent="#promptListCategoriesAtWindow"
+        >
+          <div class="accordion-body" style="padding: unset;" id="category-${sanitizedCategory}"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = accordionHtml;
+
+  return wrapper.firstElementChild;
+}
+
+function createPromptButton(name, index) {
+  const button = document.createElement("button");
+  button.innerText = name;
+  button.classList.add("list-group-item", "list-group-action");
+  button.setAttribute("data-bs-dismiss", "modal");
+  button.style.width = "100%";
+  button.onclick = function() {
+    initializeAsPrompt(index);
+  };
+  return button;
+}
+
+function appendOptionToCategory(option, index, categoriesContainer) {
+  const categoryBody = getCategoryBody(option.category, categoriesContainer);
+  const promptButton = createPromptButton(option.name, index);
+  categoryBody.appendChild(promptButton);
+}
+
+function getCategoryBody(categoryName, container) {
+  const categoryId = `category-${categoryName}`;
+  let categoryBody = document.getElementById(categoryId);
+
+  if (!categoryBody) {
+    const accordion = createAccordionOfCategory(categoryName);
+    container.appendChild(accordion);
+    categoryBody = accordion.querySelector(`#${categoryId}`);
+  }
+
+  return categoryBody;
+}
+
+function loadPromptListOptions(ungroupedContainerId, groupedContainerId,options){
+  const container = document.getElementById(ungroupedContainerId);
+  const categoriesContainer = document.getElementById(groupedContainerId);
+
+  options.forEach((option, index) => {
+    if (!option.category) {
+      const button = createPromptButton(option.name, index);
+      container.appendChild(button);
+    } else {
+      appendOptionToCategory(option, index, categoriesContainer);
+    }
+  });
 };
+
+// fim de menu prompt
 
 
 function getValueByID(id){
@@ -712,17 +782,27 @@ function renderLatexInString(inputString) {
 
 function appendChatUser(text){
   const container = document.getElementById("terminalContainer");
-  let p = renderLatexInString(text);
-  p.classList.add("chatUser");
-  container.appendChild(p);
+  let paragraphChatUser = document.createElement("p");
+  if (isFormattingEnabled === false){
+    paragraphChatUser.innerText = text;
+  }else{
+    paragraphChatUser = renderLatexInString(text);
+  }
+  paragraphChatUser.classList.add("chatUser");
+  container.appendChild(paragraphChatUser);
   scrollToBottom("scroll");
 }
 
 function appendChatBot(text){
   const container = document.getElementById("terminalContainer");
-  let p = renderLatexInString(text);
-  p.classList.add("chatBot");
-  container.appendChild(p);
+  let paragraphChatBot = document.createElement("p");
+  if (isFormattingEnabled === false){
+    paragraphChatBot.innerText = text;
+  }else{
+    paragraphChatBot = renderLatexInString(text);
+  }
+  paragraphChatBot.classList.add("chatBot");
+  container.appendChild(paragraphChatBot);
   scrollToBottom("scroll");
 }
 
@@ -748,6 +828,7 @@ function disableUserInteraction(){
   disableByID("btnRegenerate");
   disableByID("btnExpand");
   disableByID("btnTextToSpeech")
+  disableByID("btnDisableFormatting");
   disableByID("btnClearChat");
   disableByID("promptMenuButton");
   disableByID("btnVerifyInformation");
@@ -761,6 +842,7 @@ function enableUserInteraction(){
   enableByID("btnRegenerate");
   enableByID("btnExpand");
   enableByID("btnTextToSpeech")
+  enableByID("btnDisableFormatting");
   enableByID("btnClearChat");
   enableByID("promptMenuButton");
   enableByID("btnVerifyInformation");
@@ -842,6 +924,15 @@ function disableTextToSpeech(){
   );
 };
 
+function disableFormatting(){
+  isFormattingEnabled = false;
+  replaceClassByID(
+    /*id:*/ "iconDisableFormatting",
+    /*oldClass:*/ "mdi-format-title",
+    /*newClass:*/ "mdi-format-clear"
+  );
+};
+
 //expand the size of the message input area
 function expandChatInput(){
   expandedChatInput = true;
@@ -864,6 +955,15 @@ function enableTextToSpeech(){
     /*id:*/ "iconTextToSpeech",
     /*oldClass:*/ "mdi-volume-off",
     /*newClass:*/ "mdi-volume-high"
+  );
+};
+
+function enableFormatting(){
+  isFormattingEnabled = true;
+  replaceClassByID(
+    /*id:*/ "iconDisableFormatting",
+    /*oldClass:*/ "mdi-format-clear",
+    /*newClass:*/ "mdi-format-title"
   );
 };
 
@@ -953,6 +1053,18 @@ async function onClickTextToSpeechButton(){
 }
 onClickTextToSpeechButton();
 
+async function onClickDisableFormattingButton(){
+  const button = document.getElementById('btnDisableFormatting');
+  button.addEventListener('click', async () => {
+    if (isFormattingEnabled === true){
+      disableFormatting();
+    }else{
+      enableFormatting();
+    }
+  });
+}
+onClickDisableFormattingButton();
+
 
 /* End of event listener functions */
 
@@ -1006,8 +1118,8 @@ async function onClickVerifyInformation(){
   button.addEventListener('click', async () => {
     enableLoading();
     const verifyModel = [
-      "gpt-4o-mini",
       "gpt-4.1-mini",
+      "google/gemini-2.5-flash",
     ];
     const randonModelIndex = Math.floor(Math.random() * verifyModel.length);
     const choosedModel = verifyModel[randonModelIndex];
