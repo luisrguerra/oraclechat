@@ -736,6 +736,7 @@ function getPrompt(){
 }
 
 function renderLatexInString(inputString) {
+    inputString = removeMarkdownFormatting(inputString);
     // Expressão regular para encontrar partes do texto que estão entre \( e \) ou \[ e \]
     const latexRegex = /\\[([]([\s\S]*?)\\[)\]]/g;
     const parts = inputString.split(latexRegex);
@@ -770,7 +771,29 @@ function renderLatexInString(inputString) {
     return container;
 }
 
+function removeMarkdownFormatting(text) {
+  // Input validation: return empty string for null/undefined
+  if (text === null || text === undefined) return "";
 
+  try {
+    // Ensure we are working with a string
+    const str = String(text);
+
+    // Remove headings (## / ###) and bold markdown (** and ***)
+    return str
+      .replace(/^#{2,3}\s+/gm, '') // remove leading ## or ### at line starts
+      .replace(/\*\*\*/g, '')     // remove triple asterisks
+      .replace(/\*\*/g, '');      // remove double asterisks
+  } catch (err) {
+    // Log error and return a safe fallback
+    console.log("removeMarkdownFormatting error:", err);
+    try {
+      return String(text);
+    } catch {
+      return "";
+    }
+  }
+}
 
 function appendChatUser(text){
   const container = document.getElementById("terminalContainer");
