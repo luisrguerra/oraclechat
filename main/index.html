@@ -772,6 +772,11 @@ function renderLatexInString(inputString) {
 }
 
 function removeMarkdownFormatting(text) {
+  // If the string contains a fenced code block marker (```), return it unchanged
+  if (typeof text === 'string' && text.includes('```')) {
+    return text;
+  }
+
   // Input validation: return empty string for null/undefined
   if (text === null || text === undefined) return "";
 
