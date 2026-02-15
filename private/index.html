@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <!-- Improved viewing on smartphones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://luisrguerra.github.io/oraclechat/" />
+  <link rel="manifest" href="/oraclechat/manifest.json">
+  <title>OracleChat</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-60KGVZN7DG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-60KGVZN7DG');
+  </script>
+
+  <!-- load material design resources -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <!--Bootstrap -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.min.js" integrity="sha512-fHY2UiQlipUq0dEabSM4s+phmn+bcxSYzXP4vAXItBvBHU7zAM/mkhCZjtBEIJexhOMzZbgFlPLuErlJF2b+0g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" integrity="sha512-Z/def5z5u2aR89OuzYcxmDJ0Bnd5V1cKqBEbvLOiUNWdg9PQeXVvXLI90SE4QOHGlfLqUnDNVAYyZi8UwUTmWQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Material Design Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css" integrity="sha512-LX0YV/MWBEn2dwXCYgQHrpa9HJkwB+S+bnBpifSOTO1No27TqNMKYoAn6ff2FBh03THAzAiiCwQ+aPX+/Qt/Ow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"
+      onload="renderMathInElement(document.body);">
+  </script> 
+</head>
+
+<!-- css -->
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/scrollbar.css">
+<link rel="stylesheet" href="css/select.css">
+<link rel="stylesheet" href="css/chat.css">
+<link rel="stylesheet" href="css/prompt.css">
+<link rel="stylesheet" href="css/darkmode.css">
+<link disabled rel="stylesheet" href="css/whitemode.css">
+
+<body>
+
+<div id="scroll" class="chatContent">
+  <!-- break line -->
+  <br>
+  
+  <div class="selectors">
+  <button id="promptMenuSelectorButton" class="btn btn-outline-light promptMenuButton" data-bs-toggle="modal" data-bs-target="#promptMenuSelectorWindow">Prompts</button>
+  <button id="promptMenuButton" class="btn btn-outline-light promptMenuButton" data-bs-toggle="modal" data-bs-target="#promptMenuWindow">Opções</button>
+  </div>
+
+  <!-- terminal text -->
+  <div id="terminalContainer"></div>
+
+</div> <!-- end of chatContent div -->
+
+<!-- text input field -->
+<div id="prompt-container" class="contracted">
+<div style="margin-inline: 1em;">
+ <button id="showPromptSelectorButton" class="btn btn-outline-light prompt-button unnecessary-text" style="margin-right: 0.25em;"  data-bs-toggle="modal" data-bs-target="#promptViewWindow">
+  <span class="mdi mdi-text-account"> <span class="unnecessary-text">Prompt</span></span>
+ </button>
+ <!-- button activate text to speech -->
+ <button id="btnTextToSpeech" class="btn btn-outline-light prompt-button">
+  <span id="iconTextToSpeech" class="mdi mdi-volume-off"> <span class="unnecessary-text">Voz</span></span>
+ </button>
+<!-- button activate formatting -->
+<button id="btnDisableFormatting" class="btn btn-outline-light prompt-button prompt-button-posterior unnecessary-text">
+  <span id="iconDisableFormatting" class="mdi mdi-format-title"> <span class="unnecessary-text">Formatação</span></span>
+</button>
+ <!-- clear message chat button -->
+ <button id="btnClearChat" class="btn btn-outline-light prompt-button prompt-button-posterior">
+  <span class="mdi mdi-delete"> <span class="unnecessary-text">Apagar</span></span>
+ </button>
+ <!-- button regenerate last message -->
+ <button id="btnRegenerate" class="btn btn-outline-light prompt-button prompt-button-posterior">
+  <span class="mdi mdi-refresh"> <span class="unnecessary-text">Regerar</span></span>
+ </button>
+  <!-- button verify information -->
+  <button id="btnVerifyInformation" class="btn btn-outline-light prompt-button prompt-button-posterior">
+    <span class="mdi mdi-shield-search"> <span class="unnecessary-text">Verificar</span></span>
+  </button>
+ <!-- button generate art -->
+ <!-- <button id="btnArtGeneration" class="btn btn-outline-light prompt-button prompt-button-posterior">
+  <span class="mdi mdi-robot-happy"> <span class="unnecessary-text">Apps</span></span>
+ </button>-->
+ <!-- expand text input button -->
+ <button id="btnExpand" class="btn btn-outline-light prompt-button prompt-button-posterior">
+  <span id="iconExpand" class="mdi mdi-arrow-expand-up"> <span id="btnExpandText" class="unnecessary-text">Expandir</span></span>
+ </button>
+ <!-- send button -->
+ <button id="btnSendUserInput" class="btn btn-primary enviar">
+  <span class="mdi mdi-send"></span>
+ </button>
+ <!-- input prompt -->
+ <textarea maxlength="4000" class="form-control" type="text" id="formterminal"></textarea>
+</div>
+</div>
+
+</body>
+
+<!-- modal dialog window -->
+<div class="modal fade" id="promptViewWindow" tabindex="-1">
+  <!-- modal-dialog-centered torna centralizado no meio -->
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="theme modal-content">
+        
+       <!-- modal dialog window Header -->
+       <div class="theme modal-header">
+          <!-- Title at the top of the left of the modal dialog-->
+          <!-- fs-5 defines the text size -->
+          <h1 id="prompt-title" class="modal-title fs-5"></h1>
+          <!-- "X" close button on the right side -->
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+       </div>
+    
+        <!-- body of modal dialog, main content of modal dialog -->
+       <div class="modal-body">
+          <h6>Default model: <span id="prompt-default-model"></span></h6>
+          <h4 id="prompt-text"></h4>
+       </div>
+   
+    </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+</div> <!-- modal -->
+
+<!-- Full screen window of the menu selector prompts -->
+<div class="modal fade" id="promptMenuWindow" tabindex="-1">
+ <!-- "modal-fullscreen" sets the modal to full screen -->
+ <div class="modal-dialog modal-fullscreen">
+  <div class="theme modal-content">
+    
+  <!-- modal dialog window header -->
+  <div class="theme modal-header">
+  <!-- Title at the top of the window on the left side -->
+   <!-- "fs-5" defines the text size -->
+   <h1 class="modal-title fs-5">Opções</h1>
+   <!-- "X" close button on the right side -->
+   <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+  </div>
+   <!-- modal body, main content of modal -->
+  <div class="modal-body">
+    <div class="promptMenu">
+     <h5 style="text-align: center;">Modelo de inteligência artificial</h5>
+     <select class="form-select form-select-lg mb-3 theme" id="modelSelect" style="max-width: 100%;"></select>
+     <h5 style="text-align: center;">Modo de precisão</h5>
+     <select class="form-select form-select-lg mb-3 theme" id="modelMode" style="max-width: 100%;"></select>
+     <h5 style="text-align: center;">Modelo de Voz</h5>
+     <select class="form-select form-select-lg mb-3 theme" id="voiceModelSelect" style="max-width: 100%;"></select>
+    </div>
+  </div>
+  </div> <!-- modal-content -->
+ </div> <!-- modal-dialog -->
+</div> <!-- modal -->
+
+<!-- Full screen window of the menu to select prompts -->
+<div class="modal fade" id="promptMenuSelectorWindow" tabindex="-1">
+  <!-- "modal-fullscreen" sets the modal to full screen -->
+  <div class="modal-dialog modal-fullscreen">
+   <div class="theme modal-content">
+     
+   <!-- modal dialog window header -->
+   <div class="theme modal-header">
+   <!-- Title at the top of the window on the left side -->
+    <!-- "fs-5" defines the text size -->
+    <h1 class="modal-title fs-5">Selecione um modo</h1>
+    <!-- "X" close button on the right side -->
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+   </div>
+    <!-- modal body, main content of modal -->
+   <div class="modal-body">
+     <div class="list-group" id="promptListAtWindow"></div>
+     <div class="list-group" id="promptListCategoriesAtWindow"></div>
+   </div>
+   </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+ </div> <!-- modal -->
+
+<script type="module">
+import openailib from 'https://cdn.jsdelivr.net/npm/openai@4.100.0/+esm';
+//console.log("openailib: ",openailib);
+/* global variables */
+let openai;
+const defaultModel = "gpt-4.1-mini";
+let modelName;
+let gptTemperature;
+let mensagesObject;
+let loading = false;
+let expandedChatInput = false;
+let textToSpeechEnabled = false;
+let isFormattingEnabled = true;
+let promptMethod = "system-prompt";
+let currentPrompt='';
+let currentPromptNumber='';
+let promptPreferedModel = "";
+/* end of global variables */
+/* global constants */
+const defaultPrompt = 0;
+const modelList = [
+  {name:"Padrão",value:"",architecture:'',maxLength: 0},
+  {name:"Gemma 3 27B",value:"google/gemma-3-27b-it",architecture:'deepinfra',maxLength: 128000},
+  {name:"GPT OSS 120B",value:"openai/gpt-oss-120b",architecture:'deepinfra',maxLength: 131000},
+  {name:"GPT OSS 20B",value:"openai/gpt-oss-20b",architecture:'deepinfra',maxLength: 131000},
+  {name:"GPT 4.1 Mini",value:"gpt-4.1-mini",architecture:'openai',maxLength: 200000},
+  {name:"GPT 4.1 Nano",value:"gpt-4.1-nano",architecture:'openai',maxLength: 200000},
+  {name:"GPT 4o Mini",value:"gpt-4o-mini",architecture:'openai',maxLength: 128000},
+  {name:"Qwen3 235B A22B Thinking 2507",value:"Qwen/Qwen3-235B-A22B-Thinking-2507",architecture:'deepinfra',maxLength: 262000},
+  {name:"Qwen3 235B A22B Instruct 2507",value:"Qwen/Qwen3-235B-A22B-Instruct-2507",architecture:'deepinfra',maxLength: 262000},
+  {name:"Qwen3 Coder 480B A35B Instruct",value:"Qwen/Qwen3-Coder-480B-A35B-Instruct",architecture:'deepinfra',maxLength: 262000},
+  {name:"Kimi K2 Thinking",value:"moonshotai/Kimi-K2-Thinking",architecture:'deepinfra',maxLength: 262000},
+  {name:"Kimi K2.5",value:"moonshotai/Kimi-K2.5",architecture:'deepinfra',maxLength: 262000},
+  {name:"MiniMax M2.1",value:"MiniMaxAI/MiniMax-M2.1",architecture:'deepinfra',maxLength: 196000},
+  {name:"DeepSeek V3.2",value:"deepseek-ai/DeepSeek-V3.2",architecture:'deepinfra',maxLength: 163000},
+  {name:"mathcode-gpt-4o-mini",value:"ft:gpt-4o-mini-2024-07-18:sapien-ia:mathcode:A1MudjBI",architecture:'openai',maxLength: 128000},
+  {name:"ChatGPT 4o Latest",value:"chatgpt-4o-latest",architecture:'openai',maxLength: 128000},
+  {name:"GPT 4o 20/11/2024",value:"gpt-4o-2024-11-20",architecture:'openai',maxLength: 128000},
+  {name:"GPT 4o 6/8/2024",value:"gpt-4o-2024-08-06",architecture:'openai',maxLength: 128000},
+  {name:"O4 Mini 16/4/2025",value:"o4-mini-2025-04-16",architecture:'openai',maxLength: 200000},
+];
+
+const modeList = [
+  {name:"Normal 100%",value:1},
+  {name:"Invariável 0%",value:0},
+  {name:"Cabeça dura 10%",value:0.1},
+  {name:"Cabeça dura 20%",value:0.2},
+  {name:"Cabeça dura 30%",value:0.3},
+  {name:"Pouco criativo 40%",value:0.4},
+  {name:"Pouco criativo 50%",value:0.5},
+  {name:"Pouco criativo 60%",value:0.6},
+  {name:"Normal 70%",value:0.7},
+  {name:"Normal 80%",value:0.8},
+  {name:"Normal 90%",value:0.9},
+  {name:"Criativo 110%",value:1.1},
+  {name:"Impreciso 120%",value:1.2},
+];
+
+const voiceModelList = [
+  {name:"Browser",value:"browser"},
+];
+
+/*
+const voiceModelList = [
+  {name:"Browser",value:"browser"},
+  {name:"OpenaAI Alloy",value:"alloy"},
+  {name:"OpenaAI Echo",value:"echo"},
+  {name:"OpenaAI Fable",value:"fable"},
+  {name:"OpenaAI Onyx",value:"onyx"},
+  {name:"OpenaAI Nova",value:"nova"},
+  {name:"OpenaAI Shimmer",value:"shimmer"},
+]; */
+
+const promptsList = await getJson("https://luisrguerra.github.io/oraclechat/prompts/prompts.json");
+/* end of global constants */
+
+let currentPromptList = promptsList;
+
+function getModelArchitecture(modelName) {
+  for (const model of modelList) {
+    if (model.value === modelName) {
+      return model.architecture;
+    }
+  }
+}
+
+function ztoa(x){
+  return atob(atob(x));
+}
+
+loadSelectOptions('modelSelect',modelList);
+loadSelectOptions('modelMode',modeList);
+loadSelectOptions('voiceModelSelect',voiceModelList);
+loadPromptListOptions('promptListAtWindow','promptListCategoriesAtWindow',currentPromptList);
+updateTemperature();
+initializeAsPrompt(defaultPrompt);
+
+async function getJson(fileName){
+  try {
+    const response = await fetch(fileName);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Error getting JSON: ',fileName,":", error);
+    return [];
+  }
+};
+
+/* chat logic functions */
+async function initializeAsPrompt(number){
+  cleanChat();
+  const promptObj= currentPromptList[number];
+  currentPrompt = promptObj.prompt;
+  currentPromptNumber = number;
+  promptPreferedModel = promptObj.model;
+  updateModel();
+  const promptName = promptObj.name;
+  const method = promptObj.method;
+  const redirect = promptObj.redirect;
+  const defaultPromptModel = promptObj.model;
+
+  if (redirect !== "" || redirect !== undefined){
+      window.open(redirect,"_self")
+  }
+
+  //update information
+  setPromptModalText(currentPrompt);
+  setPromptModalTitle(promptName);
+  setPromptDefaultModel(defaultPromptModel);
+  appendChatBot(promptObj.description);
+  //initialize chat conversation
+  if (method === "evry-user-begin" || method === "evry-user-end"){
+    promptMethod = method;
+    mensagesObject = await configurar("");
+  }else{
+    promptMethod = "system-prompt";
+    mensagesObject = await configurar(currentPrompt);
+  }
+  document.getElementById('promptMenuSelectorButton').innerText = promptName;
+  console.log("Current prompt method:", promptMethod);
+}
+
+function getModelSelect(){
+  let modelSelected = getValueByID('modelSelect');
+  if (modelSelected === ""){
+    modelSelected = defaultModel;
+  }
+  return modelSelected;
+}
+
+function getModelMode(){
+  const modelMode = parseFloat(getValueByID('modelMode'));
+  return modelMode;
+}
+
+function getVoiceModelSelect(){
+  const voiceModelSelected = getValueByID('voiceModelSelect');
+  return voiceModelSelected;
+}
+
+
+function updateModel(){
+  let modelSelected = getValueByID('modelSelect');
+  if (promptPreferedModel === "" || promptPreferedModel === undefined) {
+    modelName = getModelSelect();
+  }else{
+    if (modelSelected === "" || !modelSelected) {
+      modelName = promptPreferedModel;
+    }else{
+      modelName = getModelSelect();
+    }
+  }
+  const model = modelList.find(model => model.value === modelName);
+  document.getElementById('formterminal').maxLength = model.maxLength;
+  console.log("Updated model to:", modelName);
+};
+
+function updateTemperature(){
+  gptTemperature = getModelMode();
+  console.log("Updated temperature to:", gptTemperature);
+};
+
+function promptSelectUpdateBehavior(){
+  interruptTextToSpeech();
+  updateTemperature();
+  const promptSelected = currentPromptNumber;
+  initializeAsPrompt(promptSelected);
+}
+
+function popLastMessages(){
+  let lastMessageIndex = mensagesObject.length -1;
+  let lastMessage = mensagesObject[lastMessageIndex];
+  let lastMessageUserInput = "";
+  let lastMessageRole = lastMessage.role;
+  if (lastMessageRole === "assistant"){
+    mensagesObject.pop();
+    lastMessageIndex = mensagesObject.length -1;
+    lastMessage = mensagesObject[lastMessageIndex];
+    lastMessageRole = lastMessage.role;
+    if (lastMessageRole === "user"){
+      lastMessageUserInput = lastMessage.content;
+      mensagesObject.pop();
+    }
+  }
+  return lastMessageUserInput;
+}
+
+async function appendChatMessages(userInput){
+  if (loading === false){
+    enableLoading();
+    try {
+      mensagesObject = await generateChatMessages(userInput, mensagesObject);
+      const textResponse = lastMessage(mensagesObject);
+      appendChatBot(textResponse);
+      readMessageWithVoice(textResponse);
+    } catch (error) {
+      console.error("Erro ao enviar mensagem para o serviço de API:", error);
+      appendChatBot("Erro de conexão com o serviço de API. Mensagem não enviada.");
+    }
+    disableLoading();
+  };
+};
+
+/* End of chat logic functions */
+
+/* Functions for llm api */
+
+function atoc(){
+  const hash = 'ZXlKaGNHbExaWGtpT2lKemF5MDRSVGRCTjNWSFVrVjVWRUpUU2paUFVFaGxlVlF6UW14aWEwWktXa2xwVFdobmRXZ3pXVWxzTTJ0VlpURlJZVzhpTENKa1lXNW5aWEp2ZFhOc2VVRnNiRzkzUW5KdmQzTmxjaUk2ZEhKMVpYMD0=';
+  return JSON.parse(ztoa(hash));
+}
+
+function atod(){
+  const hash = 'ZXlKaGNHbExaWGtpT2lKTk9GaG5lRko0UlZVMFNFZFRabkZMZFZaR2NtdzRVVXhLU1RFd05qZE5WU0lzSW1SaGJtZGxjbTkxYzJ4NVFXeHNiM2RDY205M2MyVnlJanAwY25WbExDSmlZWE5sVlZKTUlqb2lhSFIwY0hNNkx5OWhjR2t1WkdWbGNHbHVabkpoTG1OdmJTOTJNUzl2Y0dWdVlXa2lmUT09';
+  return JSON.parse(ztoa(hash));
+}
+
+function atoe(){
+  const hash = 'ZXlKaGNHbExaWGtpT2lKemF5MXZjaTEyTVMwek5qbG1aV0k1TW1VM01ESm1ObUV3T0RFME0yTmpPREU1T0dVMlpqYzVZekUzTlRJM01EQXpPV0poWlRFME1XUXlOR0U1TW1GaE5tVXhOekEyWXpRM0lpd2laR0Z1WjJWeWIzVnpiSGxCYkd4dmQwSnliM2R6WlhJaU9uUnlkV1VzSW1KaGMyVlZVa3dpT2lKb2RIUndjem92TDI5d1pXNXliM1YwWlhJdVlXa3ZZWEJwTDNZeEluMD0=';
+  return JSON.parse(ztoa(hash));
+}
+
+function atof(){
+  const hash = 'ZXlKaGNHbExaWGtpT2lJMFlUWTVObU0xWXpoaU9ETXdNemRsTlRZMU5tUTVOMlEwWkRnNU5UTTRaVFkxTXpGbU9XUXpOR1F4WXpVeU1UUmhaR1kzWkRKbE5qazBaVFZtT1dGa0lpd2laR0Z1WjJWeWIzVnpiSGxCYkd4dmQwSnliM2R6WlhJaU9uUnlkV1VzSW1KaGMyVlZVa3dpT2lKb2RIUndjem92TDJGd2FTNTBiMmRsZEdobGNpNTRlWG92ZGpFaWZRPT0=';
+  return JSON.parse(ztoa(hash));
+}
+
+function initializeChat(behavior) {
+  return [
+    {role: "system", content: behavior}
+  ];
+}
+
+async function completionsChatTextModel(messages,modelName) {
+  console.log("Model:", modelName);
+  const parameters ={
+      model: modelName,
+      messages: messages,
+      temperature: gptTemperature,
+      /*
+      max_tokens: ,
+      top_p: ,
+      frequency_penalty: ,
+      presence_penalty: ,
+      */
+  };
+  return await openai.chat.completions.create(parameters);
+}
+
+async function generateChatMessages(promptText, messages) {
+  const prompt = {role: "user", content: promptText};
+  messages.push(prompt);
+
+  const apiResponse = await completionsChatTextModel(messages,modelName);
+  const textResponse = apiResponse.choices[0].message.content;
+
+  const assistantResponse = {role: "assistant", content: textResponse};
+  messages.push(assistantResponse);
+
+  return messages;
+}
+
+async function configurar(behavior){
+  const modelArchitecture = getModelArchitecture(modelName);
+  if (modelArchitecture === "deepinfra"){
+    openai = new openailib(atod());
+  }else if (modelArchitecture === "openrouter"){
+    openai = new openailib(atoe());
+  }else if (modelArchitecture === "openrouter-gpt-prompt"){
+    openai = new openailib(atoe());
+  }else if (modelArchitecture === "together-gpt-prompt"){
+    openai = new openailib(atof());
+  }else{
+    openai = new openailib(atoc());
+  }
+  
+  return initializeChat(behavior);
+}
+
+function lastMessage(messages){
+  return messages[messages.length - 1].content;
+}
+
+/* End of functions for llm api */
+
+/* Text-to-speech functions */
+function interruptTextToSpeech(){
+  window.speechSynthesis.cancel();
+}
+
+let textToSpeechVoices;
+speechSynthesis.addEventListener("voiceschanged", () => {
+  textToSpeechVoices = speechSynthesis.getVoices()
+});
+
+function isVoiceAvailable(voiceName) {
+  for (const voice of textToSpeechVoices) {
+    if (voice.name === voiceName) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function findVoiceByName(voiceName) {
+  return textToSpeechVoices.find(voice => voice.name === voiceName);
+}
+
+function setupVoiceBrowser(voice){
+  const preferenceVoice = "Microsoft Antonio Online (Natural) - Portuguese (Brazil)";
+  //const preferenceVoice = "Microsoft Francisca Online (Natural) - Portuguese (Brazil)";
+  if (isVoiceAvailable(preferenceVoice)){
+    voice.voice = findVoiceByName(preferenceVoice);
+  }
+  return voice;
+}
+
+function reader(text, language){
+  interruptTextToSpeech();
+  let voice = new SpeechSynthesisUtterance();
+  voice = setupVoiceBrowser(voice);
+  voice.lang = language;
+  voice.text = text;
+  voice.volume = 1;
+  voice.rate = 0.9;
+
+  voice.onend = function() {
+	  console.log('Speech has finished');
+  }
+
+  speechSynthesis.speak(voice);
+};
+
+async function openaiReader(text,voice) {
+  try {
+    const mp3 = await openai.audio.speech.create({
+      model: "tts-1",
+      voice: voice,
+      response_format: "mp3",
+      input: text,
+    });
+
+    const buffer = await mp3.arrayBuffer();
+    const blob = new Blob([buffer], { type: 'audio/mp3' });
+
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+
+    audio.play();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function readMessageWithVoice(text){
+  if(textToSpeechEnabled === true){
+    const voiceModel = getVoiceModelSelect();
+    if (voiceModel === "browser"){
+      reader(text, "pt-BR");
+    }else{
+      openaiReader(text,voiceModel);
+    }
+  }
+}
+
+/* End of text-to-speech functions */
+
+/* DOM manipulation functions */
+
+function cleanByID(id){
+  const element = document.getElementById(id);
+  element.innerText = "";
+}
+
+function cleanInputByID(id){
+  const element = document.getElementById(id);
+  element.value = "";
+}
+
+function cleanChat(){
+  cleanByID("terminalContainer");
+}
+
+function createSelectOption(text, value, selected) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.text = text;
+  if (selected) {
+    option.selected = true;
+  }
+  return option;
+}
+
+function loadSelectOptions(ID,optionList){
+  const maxItems = optionList.length;
+  const Selectelement = document.getElementById(ID);
+  for (let i = 0; i < maxItems; i++) {
+    const name = optionList[i].name;
+    const value = optionList[i].value;
+    let selected = false;
+    if(i==0){
+      selected = true;
+    }
+    const option = createSelectOption(name, value, selected);
+    Selectelement.appendChild(option);
+  }
+};
+
+//menu prompt
+function createAccordionOfCategory(category) {
+  if (typeof category !== 'string' || category.trim() === '') {
+    throw new Error('O parâmetro "category" deve ser uma string não vazia.');
+  }
+
+  const sanitizedCategory = category.trim();
+
+  const getElementId = (type) => `${type}-${sanitizedCategory}`;
+
+  const accordionHtml = `
+    <div class="accordion" 
+    id="accordion-${sanitizedCategory}"
+    >
+      <div class="accordion-item" style="border-radius: 0px;">
+        <h2 
+         class="accordion-header" 
+         id="${getElementId('heading')}"
+        >
+          <button
+            class="accordion-button collapsed text-center"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#${getElementId('collapse')}"
+            aria-expanded="false"
+            style="padding: 1em;font-size: 20px;"
+            aria-controls="${getElementId('collapse')}"
+          >
+            ${sanitizedCategory}
+          </button>
+        </h2>
+        <div
+          id="${getElementId('collapse')}"
+          class="accordion-collapse collapse"
+          aria-labelledby="${getElementId('heading')}"
+          data-bs-parent="#promptListCategoriesAtWindow"
+        >
+          <div class="accordion-body" style="padding: unset;" id="category-${sanitizedCategory}"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = accordionHtml;
+
+  return wrapper.firstElementChild;
+}
+
+function createPromptButton(name, index) {
+  const button = document.createElement("button");
+  button.innerText = name;
+  button.classList.add("list-group-item", "list-group-action");
+  button.setAttribute("data-bs-dismiss", "modal");
+  button.style.width = "100%";
+  button.onclick = function() {
+    initializeAsPrompt(index);
+  };
+  return button;
+}
+
+function appendOptionToCategory(option, index, categoriesContainer) {
+  const categoryBody = getCategoryBody(option.category, categoriesContainer);
+  const promptButton = createPromptButton(option.name, index);
+  categoryBody.appendChild(promptButton);
+}
+
+function getCategoryBody(categoryName, container) {
+  const categoryId = `category-${categoryName}`;
+  let categoryBody = document.getElementById(categoryId);
+
+  if (!categoryBody) {
+    const accordion = createAccordionOfCategory(categoryName);
+    container.appendChild(accordion);
+    categoryBody = accordion.querySelector(`#${categoryId}`);
+  }
+
+  return categoryBody;
+}
+
+function loadPromptListOptions(ungroupedContainerId, groupedContainerId,options){
+  const container = document.getElementById(ungroupedContainerId);
+  const categoriesContainer = document.getElementById(groupedContainerId);
+
+  options.forEach((option, index) => {
+    if (!option.category) {
+      const button = createPromptButton(option.name, index);
+      container.appendChild(button);
+    } else {
+      appendOptionToCategory(option, index, categoriesContainer);
+    }
+  });
+};
+
+// fim de menu prompt
+
+
+function getValueByID(id){
+  const element = document.getElementById(id);
+  return element.value;
+}
+
+function getPrompt(){
+  return getValueByID("formterminal");
+}
+
+function renderLatexInString(inputString) {
+    inputString = removeMarkdownFormatting(inputString);
+    // Expressão regular para encontrar partes do texto que estão entre \( e \) ou \[ e \]
+    const latexRegex = /\\[([]([\s\S]*?)\\[)\]]/g;
+    const parts = inputString.split(latexRegex);
+    const container = document.createElement("p");
+
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+
+        // Verifica se a parte atual é o LaTeX ou texto normal
+        if (i % 2 === 0) {
+            const elementText = document.createElement("span");
+            elementText.innerText = part.trim();
+            container.appendChild(elementText);
+        } else {
+            // Adiciona um espaço entre o texto normal e a fórmula LaTeX
+            const space = document.createElement("span");
+            space.innerHTML = "&nbsp;"; // ou você pode usar um estilo CSS para adicionar margem
+            container.appendChild(space);
+            
+            // Renderiza o LaTeX encontrado.
+            const renderedLatex = katex.renderToString(part.trim(), { throwOnError: false });
+            const elementLatex = document.createElement("span");
+            elementLatex.innerHTML = renderedLatex;
+            container.appendChild(elementLatex);
+
+            const space2 = document.createElement("span");
+            space2.innerHTML = "&nbsp;"; // ou você pode usar um estilo CSS para adicionar margem
+            container.appendChild(space2);
+        }
+    }
+
+    return container;
+}
+
+function removeMarkdownFormatting(text) {
+  // If the string contains a fenced code block marker (```), return it unchanged
+  if (typeof text === 'string' && text.includes('```')) {
+    return text;
+  }
+
+  // Input validation: return empty string for null/undefined
+  if (text === null || text === undefined) return "";
+
+  try {
+    // Ensure we are working with a string
+    const str = String(text);
+
+    // Remove headings (## / ###) and bold markdown (** and ***)
+    return str
+      .replace(/^#{2,3}\s+/gm, '') // remove leading ## or ### at line starts
+      .replace(/\*\*\*/g, '')     // remove triple asterisks
+      .replace(/\*\*/g, '');      // remove double asterisks
+  } catch (err) {
+    // Log error and return a safe fallback
+    console.log("removeMarkdownFormatting error:", err);
+    try {
+      return String(text);
+    } catch {
+      return "";
+    }
+  }
+}
+
+function appendChatUser(text){
+  const container = document.getElementById("terminalContainer");
+  let paragraphChatUser = document.createElement("p");
+  if (isFormattingEnabled === false){
+    paragraphChatUser.innerText = text;
+  }else{
+    paragraphChatUser = renderLatexInString(text);
+  }
+  paragraphChatUser.classList.add("chatUser");
+  container.appendChild(paragraphChatUser);
+  scrollToBottom("scroll");
+}
+
+function appendChatBot(text){
+  const container = document.getElementById("terminalContainer");
+  let paragraphChatBot = document.createElement("p");
+  if (isFormattingEnabled === false){
+    paragraphChatBot.innerText = text;
+  }else{
+    paragraphChatBot = renderLatexInString(text);
+  }
+  paragraphChatBot.classList.add("chatBot");
+  container.appendChild(paragraphChatBot);
+  scrollToBottom("scroll");
+}
+
+function disableByID(id){
+  const element = document.getElementById(id);
+  element.disabled = true;
+}
+
+function enableByID(id){
+  const element = document.getElementById(id);
+  element.disabled = false;
+}
+
+function clearInput(){
+  cleanInputByID("formterminal");
+}
+
+function disableUserInteraction(){
+  disableByID("btnSendUserInput");
+  disableByID("showPromptSelectorButton");
+  disableByID("modelSelect");
+  disableByID("modelMode");
+  disableByID("btnRegenerate");
+  disableByID("btnExpand");
+  disableByID("btnTextToSpeech")
+  disableByID("btnDisableFormatting");
+  disableByID("btnClearChat");
+  disableByID("promptMenuButton");
+  disableByID("btnVerifyInformation");
+}
+
+function enableUserInteraction(){
+  enableByID("btnSendUserInput");
+  enableByID("showPromptSelectorButton");
+  enableByID("modelSelect");
+  enableByID("modelMode");
+  enableByID("btnRegenerate");
+  enableByID("btnExpand");
+  enableByID("btnTextToSpeech")
+  enableByID("btnDisableFormatting");
+  enableByID("btnClearChat");
+  enableByID("promptMenuButton");
+  enableByID("btnVerifyInformation");
+}
+
+function setTextByID(text, id){
+  const element = document.getElementById(id);
+  element.innerText = text;
+}
+
+function setButtonEnviarText(text){
+  const element = document.getElementById('btnSendUserInput');
+  element.innerHTML = text;
+}
+
+function setPromptModalText(text){
+  setTextByID(text, 'prompt-text');
+}
+
+function setPromptDefaultModel(text){
+  if (text === undefined){
+    text = defaultModel;
+  }
+  setTextByID(text, 'prompt-default-model');
+}
+
+function setPromptModalTitle(text){
+  setTextByID(text, 'prompt-title');
+}
+
+function enableLoading(){
+  loading = true;
+  disableUserInteraction();
+  const loadingIcon = '<span class="mdi mdi-loading mdi-spin"></span>';
+  setButtonEnviarText(loadingIcon);
+}
+
+function disableLoading(){
+  loading = false;
+  enableUserInteraction();
+  const sendIcon = '<span class="mdi mdi-send"></span>';
+  setButtonEnviarText(sendIcon);
+  clearInput()
+}
+
+function scrollToBottom(id) {
+  const element = document.getElementById(id);
+  element.scrollTop = element.scrollHeight - element.clientHeight;
+}
+
+function replaceClassByID(id, oldClass, newClass){
+  const element = document.getElementById(id);
+  element.classList.replace(oldClass, newClass);
+};
+
+//Decrease the size of the message input area
+function contractChatInput(){
+  expandedChatInput = false;
+  replaceClassByID(
+    /*id:*/ "iconExpand",
+    /*oldClass:*/ "mdi-arrow-collapse-down",
+    /*newClass:*/ "mdi-arrow-expand-up"
+  );
+  replaceClassByID(
+    /*id:*/ "prompt-container",
+    /*oldClass:*/ "expanded",
+    /*newClass:*/ "contracted"
+  );
+  setTextByID("Expandir", "btnExpandText");
+};
+
+function disableTextToSpeech(){
+  textToSpeechEnabled = false;
+  interruptTextToSpeech();
+  replaceClassByID(
+    /*id:*/ "iconTextToSpeech",
+    /*oldClass:*/ "mdi-volume-high",
+    /*newClass:*/ "mdi-volume-off"
+  );
+};
+
+function disableFormatting(){
+  isFormattingEnabled = false;
+  replaceClassByID(
+    /*id:*/ "iconDisableFormatting",
+    /*oldClass:*/ "mdi-format-title",
+    /*newClass:*/ "mdi-format-clear"
+  );
+};
+
+//expand the size of the message input area
+function expandChatInput(){
+  expandedChatInput = true;
+  replaceClassByID(
+    /*id:*/ "iconExpand",
+    /*oldClass:*/ "mdi-arrow-expand-up",
+    /*newClass:*/ "mdi-arrow-collapse-down"
+  );
+  replaceClassByID(
+    /*id:*/ "prompt-container",
+    /*oldClass:*/ "contracted",
+    /*newClass:*/ "expanded"
+  );
+  setTextByID("Encolher", "btnExpandText");
+};
+
+function enableTextToSpeech(){
+  textToSpeechEnabled = true;
+  replaceClassByID(
+    /*id:*/ "iconTextToSpeech",
+    /*oldClass:*/ "mdi-volume-off",
+    /*newClass:*/ "mdi-volume-high"
+  );
+};
+
+function enableFormatting(){
+  isFormattingEnabled = true;
+  replaceClassByID(
+    /*id:*/ "iconDisableFormatting",
+    /*oldClass:*/ "mdi-format-clear",
+    /*newClass:*/ "mdi-format-title"
+  );
+};
+
+/* End of functions to manipulate the DOM */
+
+/* Event listener functions */
+
+async function onChangeModelSelect(){
+  const element = document.getElementById('modelSelect');
+  element.addEventListener('change', async () => {
+    promptSelectUpdateBehavior();
+  });
+}
+onChangeModelSelect();
+
+async function onChangeModeSelect(){
+  const element = document.getElementById('modelMode');
+  element.addEventListener('change', async () => {
+    promptSelectUpdateBehavior();
+  });
+}
+onChangeModeSelect();
+
+async function onClickEnviarButton(){
+  const element = document.getElementById('btnSendUserInput');
+  element.addEventListener('click', async () => {
+
+   const userInput = getPrompt();
+
+   if (promptMethod === "evry-user-begin"){
+     appendChatUser(userInput);
+     await appendChatMessages (currentPrompt + "\n" + userInput);
+   }else if(promptMethod === "evry-user-end"){
+     appendChatUser(userInput);
+     await appendChatMessages (userInput + "\n" + currentPrompt);
+   }else{
+    appendChatUser(userInput);
+    await appendChatMessages (userInput);
+   }
+
+   contractChatInput();
+
+  });
+}
+onClickEnviarButton();
+
+async function onClickClearChatButton(){
+  const button = document.getElementById('btnClearChat');
+  button.addEventListener('click', async () => {
+    if(confirm("Tem certeza que deseja apagar o chat?")){
+      promptSelectUpdateBehavior();
+    };
+  });
+}
+onClickClearChatButton();
+
+async function onClickRegenerateLastMessageButton(){
+  const button = document.getElementById('btnRegenerate');
+  button.addEventListener('click', async () => {
+    const lastUserInput = popLastMessages();
+    await appendChatMessages (lastUserInput);
+  });
+}
+onClickRegenerateLastMessageButton();
+
+async function onClickExpandChatInputButton(){
+  const button = document.getElementById('btnExpand');
+  button.addEventListener('click', async () => {
+    if (expandedChatInput === true){
+      contractChatInput();
+    }else{
+      expandChatInput();
+    };
+  });
+}
+onClickExpandChatInputButton();
+
+async function onClickTextToSpeechButton(){
+  const button = document.getElementById('btnTextToSpeech');
+  button.addEventListener('click', async () => {
+    if (textToSpeechEnabled === true){
+      disableTextToSpeech();
+    }else{
+      enableTextToSpeech();
+    };
+  });
+}
+onClickTextToSpeechButton();
+
+async function onClickDisableFormattingButton(){
+  const button = document.getElementById('btnDisableFormatting');
+  button.addEventListener('click', async () => {
+    if (isFormattingEnabled === true){
+      disableFormatting();
+    }else{
+      enableFormatting();
+    }
+  });
+}
+onClickDisableFormattingButton();
+
+
+/* End of event listener functions */
+
+/* code of verification of information */
+
+function getAssistantLastReply(){
+  const lastMessageIndex = mensagesObject.length -1;
+  const lastMessage = mensagesObject[lastMessageIndex];
+  if (lastMessage.role === "assistant"){
+    const lastMessageContent = lastMessage.content;
+    return lastMessageContent;
+  }else{
+    return "";
+  }
+}
+
+async function verifyAnswer(textToVeify,modelName,temperature){
+  const systemInstructions = "";
+  const userMessagePrompt = "Você será o meu assistente de verificação de informações para saber se elas são fatos reais ou não. Você deverá identificar se a informação é uma notícia falsa, ou uma afirmação incorreta. Você deverá procura por informações conflitantes com o texto fornecido, procure informações conhecidas que são incompatíveis com o texto fornecido. Você deverá escrever uma reflexão de pelo menos 5 linhas analisando a informação para descobrir se ela é uma verdade ou não e depois irá pular uma linha e dará um veredito final sobre o resultado. Verifique a seguinte informação:\n";
+  const userMessageInstructions = userMessagePrompt + textToVeify;
+  let apiVerifyAnswer = new openailib(atoc());
+  if (
+    modelName === "google/gemini-pro-1.5" || 
+    modelName === "anthropic/claude-3-haiku"
+  ){
+    apiVerifyAnswer = new openailib(atoe());
+  }
+  let verifyMessages = initializeChat(systemInstructions);
+  const prompt = {role: "user", content: userMessageInstructions};
+  verifyMessages.push(prompt);
+  console.log("Verification model name:", modelName);
+  console.log("Verification temperature:", temperature);
+  const parameters ={
+      model: modelName,
+      messages: verifyMessages,
+      temperature: 0.25,
+  };
+  try {
+    const apiResponse = await apiVerifyAnswer.chat.completions.create(parameters);
+    const textResponse = apiResponse.choices[0].message.content;
+    return textResponse;
+  } catch (error) {
+    console.error("Error occurred during API call:", error);
+    const errorMessage = "Erro ao verificar a informação.";
+    return errorMessage;
+  }
+}
+
+async function onClickVerifyInformation(){
+  const button = document.getElementById('btnVerifyInformation');
+  button.addEventListener('click', async () => {
+    enableLoading();
+    const verifyModel = [
+      "gpt-4.1-mini",
+      "google/gemini-2.5-flash",
+    ];
+    const randonModelIndex = Math.floor(Math.random() * verifyModel.length);
+    const choosedModel = verifyModel[randonModelIndex];
+    const temperature = Math.round(Math.random() * 10) / 10;
+    const assistantLastReply = getAssistantLastReply();
+    if(assistantLastReply != ""){
+      const verificationResult = await verifyAnswer(assistantLastReply,choosedModel,temperature);
+      const warning = "\n\n Atenção: Este verificador de informações não é preciso e pode cometer muitos erros."
+      const verificationResponse = "Verificação de resultado\nModelo utilizado na verificação: " + choosedModel + "\nTemperatura:" + temperature + "\n\n" + verificationResult + warning;
+      appendChatBot(verificationResponse);
+    }
+    disableLoading();
+  });
+}
+onClickVerifyInformation()
+
+/* end of code of verification of information */
+
+
+</script>
