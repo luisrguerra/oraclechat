@@ -191,7 +191,7 @@ import openailib from 'https://cdn.jsdelivr.net/npm/openai@4.100.0/+esm';
 //console.log("openailib: ",openailib);
 /* global variables */
 let openai;
-const defaultModel = "gpt-4.1-mini";
+const defaultModel = "google/gemma-4-31B-it";
 let modelName;
 let gptTemperature;
 let mensagesObject;
@@ -208,6 +208,7 @@ let promptPreferedModel = "";
 const defaultPrompt = 0;
 const modelList = [
   {name:"Padrão",value:"",architecture:'',maxLength: 0},
+  {name:"Gemma 4 31B",value:"google/gemma-4-31B-it",architecture:'deepinfra',maxLength: 262000},
   {name:"Gemma 3 27B",value:"google/gemma-3-27b-it",architecture:'deepinfra',maxLength: 128000},
   {name:"GPT OSS 120B",value:"openai/gpt-oss-120b",architecture:'deepinfra',maxLength: 131000},
   {name:"GPT OSS 20B",value:"openai/gpt-oss-20b",architecture:'deepinfra',maxLength: 131000},
