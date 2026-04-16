@@ -136,7 +136,6 @@
 
         .loading-spinner {
             text-align: center;
-            font-style: italic;
         }
 
         #saint-name {
@@ -182,7 +181,7 @@
     <div id="loading" class="section">
         <div class="loading-spinner">
             <p id="loading-msg">Consultando as nuvens...</p>
-            <img src="https://gifer.com" width="50" style="filter: sepia(1) hue-rotate(320deg);">
+            <span style="font-size: 50px; display: block; margin-top: 10px;">☁️</span>
         </div>
     </div>
 
@@ -245,7 +244,7 @@
             {"questions": [{"q": "pergunta", "a": "opção a", "b": "opção b", "c": "opção c", "d": "opção d"}]}`;
 
             const response = await openai.chat.completions.create({
-                model: "gpt-5.4",
+                model: "gpt-5.4-mini",
                 messages: [{ role: "user", content: prompt }],
                 response_format: { type: "json_object" }
             });
