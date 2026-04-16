@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Personalidade Santo</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b0000; /* Vinho */
+            --gold: #d4af37;
+            --parchment: #fdf5e6;
+            --text: #2c2c2c;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            font-family: 'Spectral', serif;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .bible-container {
+            background-color: var(--parchment);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            border: 8px double var(--gold);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+            background-image: radial-gradient(rgba(212, 175, 55, 0.05) 2px, transparent 2px);
+            background-size: 30px 30px;
+        }
+
+        .bible-container::before {
+            content: "✠";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--gold);
+            font-size: 24px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 10px;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section { display: none; }
+        .active { display: block; animation: fadeIn 1s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .setup-group {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        label { font-weight: bold; display: block; margin-bottom: 10px; }
+
+        input[type="number"] {
+            background: transparent;
+            border: 1px solid var(--gold);
+            padding: 10px;
+            font-family: 'Spectral', serif;
+            font-size: 1.2rem;
+            width: 60px;
+            text-align: center;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 12px 25px;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            display: block;
+            margin: 20px auto;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #600000;
+            transform: scale(1.05);
+        }
+
+        .question-box {
+            font-style: italic;
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            padding: 15px;
+            text-align: left;
+            font-family: 'Spectral', serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+        }
+
+        #progress {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+            font-family: 'Cinzel', serif;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            font-style: italic;
+        }
+
+        #saint-name {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .result-text {
+            line-height: 1.8;
+            text-align: justify;
+            white-space: pre-line;
+        }
+
+        .illuminated {
+            float: left;
+            font-size: 4rem;
+            line-height: 1;
+            padding-right: 8px;
+            color: var(--primary);
+            font-family: 'Cinzel', serif;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bible-container">
+    <h1>Teste de Personalidade Santo</h1>
+
+    <!-- Tela Inicial -->
+    <div id="setup" class="section active">
+        <p style="text-align: center;">Bem-vindo, fiel peregrino. Através da reflexão e da oração, buscaremos descobrir qual baluarte da fé mais ressoa com tua alma.</p>
+        <div class="setup-group">
+            <label for="numQuestions">Quantas meditações desejas realizar? (5 a 15)</label>
+            <input type="number" id="numQuestions" value="7" min="5" max="15">
+        </div>
+        <button class="btn" onclick="startQuiz()">Iniciar Exame de Consciência</button>
+    </div>
+
+    <!-- Tela de Carregamento -->
+    <div id="loading" class="section">
+        <div class="loading-spinner">
+            <p id="loading-msg">Consultando os anais do céu...</p>
+            <img src="https://gifer.com" width="50" style="filter: sepia(1) hue-rotate(320deg);">
+        </div>
+    </div>
+
+    <!-- Tela do Quiz -->
+    <div id="quiz" class="section">
+        <div id="progress"></div>
+        <div class="question-box" id="question-text"></div>
+        <div class="options-grid">
+            <button class="option-btn" onclick="selectOption('a')" id="opt-a"></button>
+            <button class="option-btn" onclick="selectOption('b')" id="opt-b"></button>
+            <button class="option-btn" onclick="selectOption('c')" id="opt-c"></button>
+            <button class="option-btn" onclick="selectOption('d')" id="opt-d"></button>
+        </div>
+    </div>
+
+    <!-- Tela de Resultado -->
+    <div id="result" class="section">
+        <div id="saint-name"></div>
+        <div class="result-text">
+            <span class="illuminated" id="first-letter"></span>
+            <span id="result-content"></span>
+        </div>
+        <button class="btn" onclick="location.reload()">Refazer Peregrinação</button>
+    </div>
+</div>
+
+<script type="module">
+    import OpenAI from 'https://cdn.jsdelivr.net/npm/openai@4.100.0/+esm';
+
+    function ztoa(x){ return atob(atob(x)); }
+
+    function atoc(){
+        const hash = 'ZXlKaGNHbExaWGtpT2lKemF5MDRSVGRCTjNWSFVrVjVWRUpUU2paUFVFaGxlVlF6UW14aWEwWktXa2xwVFdobmRXZ3pXVWxzTTJ0VlpURlJZVzhpTENKa1lXNW5aWEp2ZFhOc2VVRnNiRzkzUW5KdmQzTmxjaUk2ZEhKMVpYMD0=';
+        return JSON.parse(ztoa(hash));
+    }
+
+    const openai = new OpenAI(atoc());
+
+    let totalQuestions = 5;
+    let currentQuestionIndex = 0;
+    let quizData = [];
+    let answers = [];
+
+    window.showSection = function(id) {
+        document.querySelectorAll('.section').forEach(div => div.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    window.startQuiz = async function() {
+        const input = document.getElementById('numQuestions').value;
+        totalQuestions = Math.min(Math.max(input, 5), 15);
+        
+        showSection('loading');
+        
+        try {
+            const prompt = `Gere um teste de personalidade católico com ${totalQuestions} perguntas. 
+            Cada pergunta deve ter 4 opções (A, B, C, D). 
+            As perguntas devem ser profundas, focando em virtudes (caridade, paciência, coragem), situações do cotidiano e vida de oração.
+            Retorne APENAS um JSON puro no seguinte formato:
+            {"questions": [{"q": "pergunta", "a": "opção a", "b": "opção b", "c": "opção c", "d": "opção d"}]}`;
+
+            const response = await openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                messages: [{ role: "user", content: prompt }],
+                response_format: { type: "json_object" }
+            });
+
+            const content = JSON.parse(response.choices[0].message.content);
+            quizData = content.questions;
+            showQuestion();
+            showSection('quiz');
+        } catch (error) {
+            console.error(error);
+            alert("A conexão com o céu falhou. Verifique sua rede.");
+            showSection('setup');
+        }
+    }
+
+    function showQuestion() {
+        const q = quizData[currentQuestionIndex];
+        document.getElementById('progress').innerText = `Reflexão ${currentQuestionIndex + 1} de ${totalQuestions}`;
+        document.getElementById('question-text').innerText = q.q;
+        
+        document.getElementById('opt-a').innerText = "A) " + q.a;
+        document.getElementById('opt-b').innerText = "B) " + q.b;
+        document.getElementById('opt-c').innerText = "C) " + q.c;
+        document.getElementById('opt-d').innerText = "D) " + q.d;
+    }
+
+    window.selectOption = function(letter) {
+        answers.push({
+            pergunta: quizData[currentQuestionIndex].q,
+            resposta: quizData[currentQuestionIndex][letter.toLowerCase()]
+        });
+
+        currentQuestionIndex++;
+        if (currentQuestionIndex < totalQuestions) {
+            showQuestion();
+        } else {
+            generateResult();
+        }
+    }
+
+    async function generateResult() {
+        showSection('loading');
+        document.getElementById('loading-msg').innerText = "O Espírito sopra onde quer... Analisando tua alma...";
+
+        try {
+            const prompt = `Com base nestas respostas de um devoto católico: ${JSON.stringify(answers)}, 
+            identifique qual Santo ou Santa da Igreja Católica possui o temperamento e virtudes mais similares. 
+            Explique a conexão de forma piedosa e inspiradora. 
+            Retorne em formato JSON: {"santo": "Nome do Santo", "explicacao": "texto longo e detalhado"}`;
+
+            const response = await openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                messages: [{ role: "user", content: prompt }],
+                response_format: { type: "json_object" }
+            });
+
+            const result = JSON.parse(response.choices[0].message.content);
+            
+            document.getElementById('saint-name').innerText = "Tu te assemelhas a " + result.santo;
+            
+            // Efeito de letra capitular (primeira letra maior)
+            const text = result.explicacao;
+            document.getElementById('first-letter').innerText = text.charAt(0);
+            document.getElementById('result-content').innerText = text.slice(1);
+            
+            showSection('result');
+        } catch (error) {
+            alert("A revelação foi obscurecida. Tente novamente.");
+            showSection('setup');
+        }
+    }
+</script>
+
+</body>
+</html>
