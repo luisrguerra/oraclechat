@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OracleChat Vision</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --accent: #0d6efd;
+            --text: #ececec;
+            --border: #333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 { margin: 0 0 10px 0; font-size: 1.5rem; text-align: center; }
+
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        
+        label { font-size: 0.85rem; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+
+        input[type="text"], input[type="password"] {
+            background: #252525;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: filter 0.2s;
+        }
+
+        button:hover { filter: brightness(1.1); }
+        button:disabled { background: #444; cursor: not-allowed; }
+
+        #output {
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        #drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        #drop-zone.dragover { border-color: var(--accent); background: rgba(16, 163, 127, 0.05); }
+
+        #preview {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            border: 1px solid var(--border);
+        }
+
+        .loading { color: var(--accent); font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h1>Reconhecimento de imagem</h1>
+
+    <!-- 2. Instrução -->
+    <div class="input-group">
+        <label>Instrução</label>
+        <input type="text" id="instruction" value="Transcreva a imagem">
+    </div>
+
+    <!-- 3. Botão Enviar -->
+    <button id="send-btn">Processar Imagem</button>
+
+    <!-- 4. Resposta -->
+    <div class="input-group">
+        <label>Resultado</label>
+        <div id="output">Aguardando envio...</div>
+    </div>
+
+    <!-- 5. Carregamento e Preview (Último Item) -->
+    <div class="input-group">
+        <label>Imagem</label>
+        <div id="drop-zone">
+            Clique ou arraste a imagem aqui para carregar
+        </div>
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
+        <img id="preview" alt="Preview">
+    </div>
+</div>
+
+<script type="module">
+    import OpenAI from 'https://cdn.jsdelivr.net/npm/openai@4.100.0/+esm';
+
+    function ztoa(x){
+        return atob(atob(x));
+    }
+
+
+    function atoc(){
+        const hash = 'ZXlKaGNHbExaWGtpT2lKemF5MDRSVGRCTjNWSFVrVjVWRUpUU2paUFVFaGxlVlF6UW14aWEwWktXa2xwVFdobmRXZ3pXVWxzTTJ0VlpURlJZVzhpTENKa1lXNW5aWEp2ZFhOc2VVRnNiRzkzUW5KdmQzTmxjaUk2ZEhKMVpYMD0=';
+        return JSON.parse(ztoa(hash));
+    }
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const preview = document.getElementById('preview');
+    const sendBtn = document.getElementById('send-btn');
+    const output = document.getElementById('output');
+    
+    let base64Image = null;
+
+    // --- Lógica de Upload ---
+    dropZone.onclick = () => fileInput.click();
+
+    dropZone.ondragover = (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    };
+
+    dropZone.ondragleave = () => dropZone.classList.remove('dragover');
+
+    dropZone.ondrop = (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    };
+
+    fileInput.onchange = (e) => {
+        if (e.target.files.length) handleFile(e.target.files[0]);
+    };
+
+    function handleFile(file) {
+        if (!file.type.startsWith('image/')) return alert("Selecione uma imagem válida.");
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            base64Image = e.target.result;
+            preview.src = base64Image;
+            preview.style.display = 'block';
+            dropZone.innerText = `Arquivo: ${file.name}`;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // --- Lógica da API ---
+    sendBtn.onclick = async () => {
+        const promptText = document.getElementById('instruction').value;
+
+        if (!base64Image) return alert("Carregue uma imagem primeiro.");
+
+        sendBtn.disabled = true;
+        output.innerHTML = '<span class="loading">IA está analisando...</span>';
+
+        try {
+            const openai = new OpenAI (atoc());
+
+            const response = await openai.chat.completions.create({
+                model: "gpt-5.4-mini",
+                messages: [
+                    {
+                        role: "user",
+                        content: [
+                            { type: "text", text: promptText },
+                            {
+                                type: "image_url",
+                                image_url: { "url": base64Image }
+                            },
+                        ],
+                    },
+                ],
+            });
+
+            output.innerText = response.choices[0].message.content;
+        } catch (error) {
+            output.innerHTML = `<span style="color: #ff6b6b;">Erro: ${error.message}</span>`;
+            console.error(error);
+        } finally {
+            sendBtn.disabled = false;
+        }
+    };
+</script>
+
+</body>
+</html>
