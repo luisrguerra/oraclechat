@@ -42,13 +42,25 @@
         
         label { font-size: 0.85rem; color: #999; text-transform: uppercase; letter-spacing: 1px; }
 
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="password"], select {
             background: #252525;
             border: 1px solid var(--border);
             color: white;
             padding: 12px;
             border-radius: 8px;
             outline: none;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
         }
 
         button {
@@ -105,6 +117,12 @@
 <div class="app-container">
     <h1>Reconhecimento de imagem</h1>
 
+    <!-- 1. Seleção de Modelo -->
+    <div class="input-group">
+        <label>Modelo de IA</label>
+        <select id="model-select"></select>
+    </div>
+
     <!-- 2. Instrução -->
     <div class="input-group">
         <label>Instrução</label>
@@ -138,19 +156,33 @@
         return atob(atob(x));
     }
 
-
     function atoc(){
         const hash = 'ZXlKaGNHbExaWGtpT2lKemF5MDRSVGRCTjNWSFVrVjVWRUpUU2paUFVFaGxlVlF6UW14aWEwWktXa2xwVFdobmRXZ3pXVWxzTTJ0VlpURlJZVzhpTENKa1lXNW5aWEp2ZFhOc2VVRnNiRzkzUW5KdmQzTmxjaUk2ZEhKMVpYMD0=';
         return JSON.parse(ztoa(hash));
     }
+
+    // --- Lista de Modelos ---
+    const modelList = [
+        {name:"GPT 5.4 Mini", value:"gpt-5.4-mini", architecture:'openai', maxLength: 300000},
+        {name:"GPT 5.4",      value:"gpt-5.4",      architecture:'openai', maxLength: 300000},
+    ];
 
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const preview = document.getElementById('preview');
     const sendBtn = document.getElementById('send-btn');
     const output = document.getElementById('output');
+    const modelSelect = document.getElementById('model-select');
     
     let base64Image = null;
+
+    // --- Popular dropdown de modelos ---
+    modelList.forEach(model => {
+        const option = document.createElement('option');
+        option.value = model.value;
+        option.textContent = model.name;
+        modelSelect.appendChild(option);
+    });
 
     // --- Lógica de Upload ---
     dropZone.onclick = () => fileInput.click();
@@ -188,6 +220,7 @@
     // --- Lógica da API ---
     sendBtn.onclick = async () => {
         const promptText = document.getElementById('instruction').value;
+        const selectedModel = modelSelect.value;
 
         if (!base64Image) return alert("Carregue uma imagem primeiro.");
 
@@ -195,10 +228,10 @@
         output.innerHTML = '<span class="loading">IA está analisando...</span>';
 
         try {
-            const openai = new OpenAI (atoc());
+            const openai = new OpenAI(atoc());
 
             const response = await openai.chat.completions.create({
-                model: "gpt-5.4-mini",
+                model: selectedModel,
                 messages: [
                     {
                         role: "user",
